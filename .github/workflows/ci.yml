@@ -1,0 +1,34 @@
+name: build
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - v*
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  build-java:
+    strategy:
+      matrix:
+        platform: [ubuntu-latest]
+    runs-on: ${{ matrix.platform }}
+    steps:
+
+      # 4. SSH 连接服务器并重启容器
+      - name: SSH to Server and Restart Docker
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ vars.SERVER_HOST }}
+          username: root  # 如果你不是用 root 登录，改这里
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          # 执行的脚本
+          script: |
+            # 测试
+            echo 1 || true
