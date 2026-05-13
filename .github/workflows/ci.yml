@@ -1,4 +1,4 @@
-name: build
+name: ci
 
 on:
   push:
@@ -11,24 +11,65 @@ on:
       - main
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
-  build-java:
-    strategy:
-      matrix:
-        platform: [ubuntu-latest]
-    runs-on: ${{ matrix.platform }}
+  validate:
+    runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      # 4. SSH 连接服务器并重启容器
-      - name: SSH to Server and Restart Docker
-        uses: appleboy/ssh-action@master
+      - name: Validate dashboard JSON
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          dashboard_dir = Path("grafana/dashboards")
+          files = sorted(dashboard_dir.glob("*.json"))
+          if not files:
+              raise SystemExit("no dashboard json files found")
+
+          for path in files:
+              with path.open("r", encoding="utf-8") as f:
+                  json.load(f)
+              print(f"validated {path}")
+          PY
+
+      - name: Validate docker compose config
+        env:
+          GRAFANA_ADMIN_PASSWORD: ci-placeholder
+        run: docker compose config
+
+  deploy:
+    needs: validate
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    steps:
+      - name: Deploy dashboards to server
+        uses: appleboy/ssh-action@v1.2.0
         with:
           host: ${{ vars.SERVER_HOST }}
-          username: root  # 如果你不是用 root 登录，改这里
+          username: ${{ vars.SERVER_USER || 'root' }}
           key: ${{ secrets.SERVER_SSH_KEY }}
-          # 执行的脚本
+          script_stop: true
           script: |
-            # 测试
-            echo 1 || true
+            set -euo pipefail
+
+            cd /data/dashboard
+            git fetch origin
+            git checkout main
+            git reset --hard origin/main
+
+            if [ ! -f .env ]; then
+              echo "Missing /data/dashboard/.env. Create it from .env.example and set GRAFANA_ADMIN_PASSWORD."
+              exit 1
+            fi
+
+            docker compose config >/dev/null
+            docker compose up -d
+            docker compose restart grafana
+
+            echo "Grafana dashboard files updated from ${{ github.sha }}"
