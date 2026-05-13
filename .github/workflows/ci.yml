@@ -71,7 +71,7 @@ jobs:
             docker compose config >/dev/null
             docker compose stop prometheus
             docker compose rm -f prometheus
-            docker volume rm dashboard_prometheus-data || true
+            # docker volume rm dashboard_prometheus-data || true
             docker compose up -d
             docker compose restart grafana
 
