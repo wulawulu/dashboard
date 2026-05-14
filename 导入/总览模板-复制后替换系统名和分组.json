@@ -33,7 +33,7 @@
       "title": "打开单机明细",
       "tooltip": "进入单台 ECS 排障明细",
       "type": "link",
-      "url": "/d/data-middle-ecs-detail/data-middle-ecs-detail?var-group=数据中台"
+      "url": "/d/data-middle-ecs-detail/data-middle-ecs-detail?var-group=__系统分组__"
     }
   ],
   "liveNow": false,
@@ -105,7 +105,7 @@
         {
           "datasource": "Prometheus",
           "editorMode": "code",
-          "expr": "count by(vendor) (node_uname_info{group=\"数据中台\"})",
+          "expr": "count by(vendor) (node_uname_info{group=\"__系统分组__\"})",
           "format": "time_series",
           "instant": true,
           "legendFormat": "{{vendor}}",
@@ -169,7 +169,7 @@
         {
           "datasource": "Prometheus",
           "editorMode": "code",
-          "expr": "count by(account) (node_uname_info{group=\"数据中台\"})",
+          "expr": "count by(account) (node_uname_info{group=\"__系统分组__\"})",
           "format": "time_series",
           "instant": true,
           "legendFormat": "{{account}}",
@@ -233,7 +233,7 @@
         {
           "datasource": "Prometheus",
           "editorMode": "code",
-          "expr": "count by(group) (node_uname_info{group=\"数据中台\"})",
+          "expr": "count by(group) (node_uname_info{group=\"__系统分组__\"})",
           "format": "time_series",
           "instant": true,
           "legendFormat": "{{group}}",
@@ -301,7 +301,7 @@
         {
           "datasource": "Prometheus",
           "editorMode": "code",
-          "expr": "count(up{job=\"node\",group=\"数据中台\"} == 1)",
+          "expr": "count(up{job=\"node\",group=\"__系统分组__\"} == 1)",
           "format": "time_series",
           "instant": true,
           "legendFormat": "在线",
@@ -369,7 +369,7 @@
         {
           "datasource": "Prometheus",
           "editorMode": "code",
-          "expr": "count(node_uname_info{job=\"node\",group=\"数据中台\"})",
+          "expr": "count(node_uname_info{job=\"node\",group=\"__系统分组__\"})",
           "format": "time_series",
           "instant": true,
           "legendFormat": "总数",
@@ -446,7 +446,7 @@
         {
           "datasource": "Prometheus",
           "editorMode": "code",
-          "expr": "count(up{job=\"node\",group=\"数据中台\"} == 0) or vector(0)",
+          "expr": "count(up{job=\"node\",group=\"__系统分组__\"} == 0) or vector(0)",
           "format": "time_series",
           "instant": true,
           "legendFormat": "异常",
@@ -514,7 +514,7 @@
         {
           "datasource": "Prometheus",
           "editorMode": "code",
-          "expr": "max(100 * (1 - avg by (instance,name) (rate(node_cpu_seconds_total{job=\"node\",group=\"数据中台\",mode=\"idle\"}[3m]))))",
+          "expr": "max(100 * (1 - avg by (instance,name) (rate(node_cpu_seconds_total{job=\"node\",group=\"__系统分组__\",mode=\"idle\"}[3m]))))",
           "format": "time_series",
           "instant": true,
           "legendFormat": "最高CPU",
@@ -582,7 +582,7 @@
         {
           "datasource": "Prometheus",
           "editorMode": "code",
-          "expr": "max(100 * (1 - node_memory_MemAvailable_bytes{job=\"node\",group=\"数据中台\"} / node_memory_MemTotal_bytes{job=\"node\",group=\"数据中台\"}))",
+          "expr": "max(100 * (1 - node_memory_MemAvailable_bytes{job=\"node\",group=\"__系统分组__\"} / node_memory_MemTotal_bytes{job=\"node\",group=\"__系统分组__\"}))",
           "format": "time_series",
           "instant": true,
           "legendFormat": "最高内存",
@@ -650,7 +650,7 @@
         {
           "datasource": "Prometheus",
           "editorMode": "code",
-          "expr": "max(100 * rate(node_disk_io_time_seconds_total{job=\"node\",group=\"数据中台\",device!~\"loop.*|ram.*|fd.*|sr.*\"}[3m]))",
+          "expr": "max(100 * rate(node_disk_io_time_seconds_total{job=\"node\",group=\"__系统分组__\",device!~\"loop.*|ram.*|fd.*|sr.*\"}[3m]))",
           "format": "time_series",
           "instant": true,
           "legendFormat": "最高IOutil",
@@ -723,7 +723,7 @@
                 "value": [
                   {
                     "title": "查看单机明细",
-                    "url": "/d/data-middle-ecs-detail/data-middle-ecs-detail?var-group=数据中台&var-instance=${__value.text}&from=${__from}&to=${__to}",
+                    "url": "/d/data-middle-ecs-detail/data-middle-ecs-detail?var-group=__系统分组__&var-instance=${__value.text}&from=${__from}&to=${__to}",
                     "targetBlank": false
                   }
                 ]
@@ -1073,7 +1073,7 @@
         {
           "datasource": "Prometheus",
           "editorMode": "code",
-          "expr": "node_uname_info{job=\"node\",group=\"数据中台\"} - 0",
+          "expr": "node_uname_info{job=\"node\",group=\"__系统分组__\"} - 0",
           "format": "table",
           "instant": true,
           "legendFormat": "基础信息",
@@ -1083,7 +1083,7 @@
         {
           "datasource": "Prometheus",
           "editorMode": "code",
-          "expr": "max by(instance,name,iid) (up{job=\"node\",group=\"数据中台\"})",
+          "expr": "max by(instance,name,iid) (up{job=\"node\",group=\"__系统分组__\"})",
           "format": "table",
           "instant": true,
           "legendFormat": "在线",
@@ -1093,7 +1093,7 @@
         {
           "datasource": "Prometheus",
           "editorMode": "code",
-          "expr": "100 * (1 - avg by(instance,name,iid) (rate(node_cpu_seconds_total{job=\"node\",group=\"数据中台\",mode=\"idle\"}[3m])))",
+          "expr": "100 * (1 - avg by(instance,name,iid) (rate(node_cpu_seconds_total{job=\"node\",group=\"__系统分组__\",mode=\"idle\"}[3m])))",
           "format": "table",
           "instant": true,
           "legendFormat": "CPU使用率",
@@ -1103,7 +1103,7 @@
         {
           "datasource": "Prometheus",
           "editorMode": "code",
-          "expr": "100 * (1 - max by(instance,name,iid) (node_memory_MemAvailable_bytes{job=\"node\",group=\"数据中台\"}) / max by(instance,name,iid) (node_memory_MemTotal_bytes{job=\"node\",group=\"数据中台\"}))",
+          "expr": "100 * (1 - max by(instance,name,iid) (node_memory_MemAvailable_bytes{job=\"node\",group=\"__系统分组__\"}) / max by(instance,name,iid) (node_memory_MemTotal_bytes{job=\"node\",group=\"__系统分组__\"}))",
           "format": "table",
           "instant": true,
           "legendFormat": "内存使用率",
@@ -1113,7 +1113,7 @@
         {
           "datasource": "Prometheus",
           "editorMode": "code",
-          "expr": "max by(instance,name,iid) ((node_filesystem_size_bytes{job=\"node\",group=\"数据中台\",fstype=~\"ext.?|xfs|nfs\",mountpoint!~\".*pod.*\"} - node_filesystem_free_bytes{job=\"node\",group=\"数据中台\",fstype=~\"ext.?|xfs|nfs\",mountpoint!~\".*pod.*\"}) * 100 / node_filesystem_size_bytes{job=\"node\",group=\"数据中台\",fstype=~\"ext.?|xfs|nfs\",mountpoint!~\".*pod.*\"})",
+          "expr": "max by(instance,name,iid) ((node_filesystem_size_bytes{job=\"node\",group=\"__系统分组__\",fstype=~\"ext.?|xfs|nfs\",mountpoint!~\".*pod.*\"} - node_filesystem_free_bytes{job=\"node\",group=\"__系统分组__\",fstype=~\"ext.?|xfs|nfs\",mountpoint!~\".*pod.*\"}) * 100 / node_filesystem_size_bytes{job=\"node\",group=\"__系统分组__\",fstype=~\"ext.?|xfs|nfs\",mountpoint!~\".*pod.*\"})",
           "format": "table",
           "instant": true,
           "legendFormat": "分区最高使用率",
@@ -1123,7 +1123,7 @@
         {
           "datasource": "Prometheus",
           "editorMode": "code",
-          "expr": "min by(instance,name,iid) (node_filesystem_avail_bytes{job=\"node\",group=\"数据中台\",fstype=~\"ext.?|xfs|nfs\",mountpoint!~\".*pod.*\"})",
+          "expr": "min by(instance,name,iid) (node_filesystem_avail_bytes{job=\"node\",group=\"__系统分组__\",fstype=~\"ext.?|xfs|nfs\",mountpoint!~\".*pod.*\"})",
           "format": "table",
           "instant": true,
           "legendFormat": "最小可用空间",
@@ -1133,7 +1133,7 @@
         {
           "datasource": "Prometheus",
           "editorMode": "code",
-          "expr": "max by(instance,name,iid) (100 * rate(node_disk_io_time_seconds_total{job=\"node\",group=\"数据中台\",device!~\"loop.*|ram.*|fd.*|sr.*\"}[3m]))",
+          "expr": "max by(instance,name,iid) (100 * rate(node_disk_io_time_seconds_total{job=\"node\",group=\"__系统分组__\",device!~\"loop.*|ram.*|fd.*|sr.*\"}[3m]))",
           "format": "table",
           "instant": true,
           "legendFormat": "磁盘繁忙度",
@@ -1143,7 +1143,7 @@
         {
           "datasource": "Prometheus",
           "editorMode": "code",
-          "expr": "max by(instance,name,iid) (node_load5{job=\"node\",group=\"数据中台\"})",
+          "expr": "max by(instance,name,iid) (node_load5{job=\"node\",group=\"__系统分组__\"})",
           "format": "table",
           "instant": true,
           "legendFormat": "5分钟负载",
@@ -1153,7 +1153,7 @@
         {
           "datasource": "Prometheus",
           "editorMode": "code",
-          "expr": "max by(instance,name,iid) (node_procs_blocked{job=\"node\",group=\"数据中台\"})",
+          "expr": "max by(instance,name,iid) (node_procs_blocked{job=\"node\",group=\"__系统分组__\"})",
           "format": "table",
           "instant": true,
           "legendFormat": "阻塞进程",
@@ -1163,7 +1163,7 @@
         {
           "datasource": "Prometheus",
           "editorMode": "code",
-          "expr": "sum by(instance,name,iid) (rate(node_disk_read_bytes_total{job=\"node\",group=\"数据中台\",device!~\"loop.*|ram.*|fd.*|sr.*\"}[3m]))",
+          "expr": "sum by(instance,name,iid) (rate(node_disk_read_bytes_total{job=\"node\",group=\"__系统分组__\",device!~\"loop.*|ram.*|fd.*|sr.*\"}[3m]))",
           "format": "table",
           "instant": true,
           "legendFormat": "磁盘读取",
@@ -1173,7 +1173,7 @@
         {
           "datasource": "Prometheus",
           "editorMode": "code",
-          "expr": "sum by(instance,name,iid) (rate(node_disk_written_bytes_total{job=\"node\",group=\"数据中台\",device!~\"loop.*|ram.*|fd.*|sr.*\"}[3m]))",
+          "expr": "sum by(instance,name,iid) (rate(node_disk_written_bytes_total{job=\"node\",group=\"__系统分组__\",device!~\"loop.*|ram.*|fd.*|sr.*\"}[3m]))",
           "format": "table",
           "instant": true,
           "legendFormat": "磁盘写入",
@@ -1183,7 +1183,7 @@
         {
           "datasource": "Prometheus",
           "editorMode": "code",
-          "expr": "max by(instance,name,iid) (rate(node_network_receive_bytes_total{job=\"node\",group=\"数据中台\",device!~\"tap.*|veth.*|br.*|docker.*|virbr.*|lo.*|cni.*\"}[3m]) * 8)",
+          "expr": "max by(instance,name,iid) (rate(node_network_receive_bytes_total{job=\"node\",group=\"__系统分组__\",device!~\"tap.*|veth.*|br.*|docker.*|virbr.*|lo.*|cni.*\"}[3m]) * 8)",
           "format": "table",
           "instant": true,
           "legendFormat": "下载带宽",
@@ -1193,7 +1193,7 @@
         {
           "datasource": "Prometheus",
           "editorMode": "code",
-          "expr": "max by(instance,name,iid) (rate(node_network_transmit_bytes_total{job=\"node\",group=\"数据中台\",device!~\"tap.*|veth.*|br.*|docker.*|virbr.*|lo.*|cni.*\"}[3m]) * 8)",
+          "expr": "max by(instance,name,iid) (rate(node_network_transmit_bytes_total{job=\"node\",group=\"__系统分组__\",device!~\"tap.*|veth.*|br.*|docker.*|virbr.*|lo.*|cni.*\"}[3m]) * 8)",
           "format": "table",
           "instant": true,
           "legendFormat": "上传带宽",
@@ -1203,7 +1203,7 @@
         {
           "datasource": "Prometheus",
           "editorMode": "code",
-          "expr": "max by(instance,name,iid) (node_netstat_Tcp_CurrEstab{job=\"node\",group=\"数据中台\"})",
+          "expr": "max by(instance,name,iid) (node_netstat_Tcp_CurrEstab{job=\"node\",group=\"__系统分组__\"})",
           "format": "table",
           "instant": true,
           "legendFormat": "TCP连接数",
@@ -1213,7 +1213,7 @@
         {
           "datasource": "Prometheus",
           "editorMode": "code",
-          "expr": "max by(instance,name,iid) (node_sockstat_TCP_tw{job=\"node\",group=\"数据中台\"})",
+          "expr": "max by(instance,name,iid) (node_sockstat_TCP_tw{job=\"node\",group=\"__系统分组__\"})",
           "format": "table",
           "instant": true,
           "legendFormat": "TIME_WAIT连接数",
@@ -1223,7 +1223,7 @@
         {
           "datasource": "Prometheus",
           "editorMode": "code",
-          "expr": "max by(instance,name,iid) (floor((time() - node_boot_time_seconds{job=\"node\",group=\"数据中台\"}) / 86400))",
+          "expr": "max by(instance,name,iid) (floor((time() - node_boot_time_seconds{job=\"node\",group=\"__系统分组__\"}) / 86400))",
           "format": "table",
           "instant": true,
           "legendFormat": "启动天数",
@@ -1233,7 +1233,7 @@
         {
           "datasource": "Prometheus",
           "editorMode": "code",
-          "expr": "100 - clamp_max(max by(instance,name,iid) ((100 * (1 - avg by(instance,name,iid) (rate(node_cpu_seconds_total{job=\"node\",group=\"数据中台\",mode=\"idle\"}[3m])))) or (100 * (1 - max by(instance,name,iid) (node_memory_MemAvailable_bytes{job=\"node\",group=\"数据中台\"}) / max by(instance,name,iid) (node_memory_MemTotal_bytes{job=\"node\",group=\"数据中台\"}))) or (max by(instance,name,iid) ((node_filesystem_size_bytes{job=\"node\",group=\"数据中台\",fstype=~\"ext.?|xfs|nfs\",mountpoint!~\".*pod.*\"} - node_filesystem_free_bytes{job=\"node\",group=\"数据中台\",fstype=~\"ext.?|xfs|nfs\",mountpoint!~\".*pod.*\"}) * 100 / node_filesystem_size_bytes{job=\"node\",group=\"数据中台\",fstype=~\"ext.?|xfs|nfs\",mountpoint!~\".*pod.*\"})) or (max by(instance,name,iid) (100 * rate(node_disk_io_time_seconds_total{job=\"node\",group=\"数据中台\",device!~\"loop.*|ram.*|fd.*|sr.*\"}[3m])))), 100) / 10",
+          "expr": "100 - clamp_max(max by(instance,name,iid) ((100 * (1 - avg by(instance,name,iid) (rate(node_cpu_seconds_total{job=\"node\",group=\"__系统分组__\",mode=\"idle\"}[3m])))) or (100 * (1 - max by(instance,name,iid) (node_memory_MemAvailable_bytes{job=\"node\",group=\"__系统分组__\"}) / max by(instance,name,iid) (node_memory_MemTotal_bytes{job=\"node\",group=\"__系统分组__\"}))) or (max by(instance,name,iid) ((node_filesystem_size_bytes{job=\"node\",group=\"__系统分组__\",fstype=~\"ext.?|xfs|nfs\",mountpoint!~\".*pod.*\"} - node_filesystem_free_bytes{job=\"node\",group=\"__系统分组__\",fstype=~\"ext.?|xfs|nfs\",mountpoint!~\".*pod.*\"}) * 100 / node_filesystem_size_bytes{job=\"node\",group=\"__系统分组__\",fstype=~\"ext.?|xfs|nfs\",mountpoint!~\".*pod.*\"})) or (max by(instance,name,iid) (100 * rate(node_disk_io_time_seconds_total{job=\"node\",group=\"__系统分组__\",device!~\"loop.*|ram.*|fd.*|sr.*\"}[3m])))), 100) / 10",
           "format": "table",
           "instant": true,
           "legendFormat": "健康值",
@@ -1409,7 +1409,7 @@
         {
           "datasource": "Prometheus",
           "editorMode": "code",
-          "expr": "100 * (1 - avg by(name,instance) (rate(node_cpu_seconds_total{job=\"node\",group=\"数据中台\",mode=\"idle\"}[3m])))",
+          "expr": "100 * (1 - avg by(name,instance) (rate(node_cpu_seconds_total{job=\"node\",group=\"__系统分组__\",mode=\"idle\"}[3m])))",
           "format": "time_series",
           "instant": false,
           "legendFormat": "{{name}} / {{instance}}",
@@ -1514,7 +1514,7 @@
         {
           "datasource": "Prometheus",
           "editorMode": "code",
-          "expr": "100 * (1 - node_memory_MemAvailable_bytes{job=\"node\",group=\"数据中台\"} / node_memory_MemTotal_bytes{job=\"node\",group=\"数据中台\"})",
+          "expr": "100 * (1 - node_memory_MemAvailable_bytes{job=\"node\",group=\"__系统分组__\"} / node_memory_MemTotal_bytes{job=\"node\",group=\"__系统分组__\"})",
           "format": "time_series",
           "instant": false,
           "legendFormat": "{{name}} / {{instance}}",
@@ -1619,7 +1619,7 @@
         {
           "datasource": "Prometheus",
           "editorMode": "code",
-          "expr": "max by(name,instance) (100 * rate(node_disk_io_time_seconds_total{job=\"node\",group=\"数据中台\",device!~\"loop.*|ram.*|fd.*|sr.*\"}[3m]))",
+          "expr": "max by(name,instance) (100 * rate(node_disk_io_time_seconds_total{job=\"node\",group=\"__系统分组__\",device!~\"loop.*|ram.*|fd.*|sr.*\"}[3m]))",
           "format": "time_series",
           "instant": false,
           "legendFormat": "{{name}} / {{instance}}",
@@ -1724,7 +1724,7 @@
         {
           "datasource": "Prometheus",
           "editorMode": "code",
-          "expr": "max by(name,instance) ((node_filesystem_size_bytes{job=\"node\",group=\"数据中台\",fstype=~\"ext.?|xfs|nfs\",mountpoint!~\".*pod.*\"} - node_filesystem_free_bytes{job=\"node\",group=\"数据中台\",fstype=~\"ext.?|xfs|nfs\",mountpoint!~\".*pod.*\"}) * 100 / node_filesystem_size_bytes{job=\"node\",group=\"数据中台\",fstype=~\"ext.?|xfs|nfs\",mountpoint!~\".*pod.*\"})",
+          "expr": "max by(name,instance) ((node_filesystem_size_bytes{job=\"node\",group=\"__系统分组__\",fstype=~\"ext.?|xfs|nfs\",mountpoint!~\".*pod.*\"} - node_filesystem_free_bytes{job=\"node\",group=\"__系统分组__\",fstype=~\"ext.?|xfs|nfs\",mountpoint!~\".*pod.*\"}) * 100 / node_filesystem_size_bytes{job=\"node\",group=\"__系统分组__\",fstype=~\"ext.?|xfs|nfs\",mountpoint!~\".*pod.*\"})",
           "format": "time_series",
           "instant": false,
           "legendFormat": "{{name}} / {{instance}}",
@@ -1829,7 +1829,7 @@
         {
           "datasource": "Prometheus",
           "editorMode": "code",
-          "expr": "node_load5{job=\"node\",group=\"数据中台\"}",
+          "expr": "node_load5{job=\"node\",group=\"__系统分组__\"}",
           "format": "time_series",
           "instant": false,
           "legendFormat": "{{name}} / {{instance}}",
@@ -1934,7 +1934,7 @@
         {
           "datasource": "Prometheus",
           "editorMode": "code",
-          "expr": "sum by(name,instance) (rate(node_network_receive_bytes_total{job=\"node\",group=\"数据中台\",device!~\"tap.*|veth.*|br.*|docker.*|virbr.*|lo.*|cni.*\"}[3m]) * 8)",
+          "expr": "sum by(name,instance) (rate(node_network_receive_bytes_total{job=\"node\",group=\"__系统分组__\",device!~\"tap.*|veth.*|br.*|docker.*|virbr.*|lo.*|cni.*\"}[3m]) * 8)",
           "format": "time_series",
           "instant": false,
           "legendFormat": "{{name}} 下载",
@@ -1944,7 +1944,7 @@
         {
           "datasource": "Prometheus",
           "editorMode": "code",
-          "expr": "-sum by(name,instance) (rate(node_network_transmit_bytes_total{job=\"node\",group=\"数据中台\",device!~\"tap.*|veth.*|br.*|docker.*|virbr.*|lo.*|cni.*\"}[3m]) * 8)",
+          "expr": "-sum by(name,instance) (rate(node_network_transmit_bytes_total{job=\"node\",group=\"__系统分组__\",device!~\"tap.*|veth.*|br.*|docker.*|virbr.*|lo.*|cni.*\"}[3m]) * 8)",
           "format": "time_series",
           "instant": false,
           "legendFormat": "{{name}} 上传",
@@ -1972,8 +1972,8 @@
   },
   "timepicker": {},
   "timezone": "browser",
-  "title": "数据中台 ECS 监控总览",
-  "uid": "data-middle-ecs-monitor",
+  "title": "__系统名称__ ECS 监控总览",
+  "uid": "__system_uid__-ecs-monitor",
   "version": 3,
   "weekStart": ""
 }
