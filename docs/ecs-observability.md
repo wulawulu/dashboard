@@ -21,15 +21,18 @@ ECS dashboard 的目标分为三层：
 
 ## 当前数据模型
 
-当前用本地 `node-exporter` mock 10 台 ECS。Prometheus 会多次采集同一个 `node-exporter:9100`，并给每个采集目标打不同标签：
+当前用本地 `node-exporter` mock 10 台 ECS。Prometheus 会多次采集同一个 `node-exporter:9100`，并给每个采集目标打不同标签。
 
-- `ecs_name`：ECS 编号，例如 `ecs-01`
-- `ecs_display_name`：展示名称
-- `ip`：展示 IP
-- `instance_id`：实例 ID
-- `env`：当前 mock 环境为 `mock`
+最终 dashboard 以 `参考/数据中台-ECS监控-1778728407266.json` 中的内网标签为基准：
 
-真实接入 ECS 时，保留这些标签语义即可。每台 ECS 应至少具备 `ecs_name`、`ecs_display_name`、`ip`、`instance_id`，这样总览表和排障明细可以稳定联动。
+- `vendor`：云厂商
+- `account`：账户
+- `group`：分组，当前为 `数据中台`
+- `name`：ECS 展示名称
+- `instance`：IP
+- `iid`：实例 ID
+
+真实接入 ECS 时，应优先保留 `vendor/account/group/name/instance/iid` 的标签语义。详细标签和面板口径见 [数据中台 ECS Dashboard 标签与面板口径](ecs-dashboard-labels.md)。
 
 ## 总览设计
 
@@ -71,7 +74,7 @@ ECS dashboard 的目标分为三层：
 在线状态来自 Prometheus 的 `up` 指标：
 
 ```promql
-up{job="node"}
+up{job="node", vendor=~"$vendor", account=~"$account", group=~"$group", name=~"$name"}
 ```
 
 判定规则：
@@ -82,7 +85,7 @@ up{job="node"}
 异常 ECS 数量：
 
 ```promql
-count(up{job="node", ecs_name=~"$ecs_name"} == 0) or vector(0)
+count(up{job="node", vendor=~"$vendor", account=~"$account", group=~"$group", name=~"$name", name=~".*$sname.*"} == 0) or vector(0)
 ```
 
 这里使用 `or vector(0)`，保证没有异常时也返回 `0`，Grafana 再将 `0` 映射为 `无`。
@@ -131,16 +134,16 @@ count(up{job="node", ecs_name=~"$ecs_name"} == 0) or vector(0)
 
 ## 详细明细联动
 
-详细明细区域通过 `排障 IP` 变量联动。选择 IP 后，底部所有明细查询都使用：
+详细明细区域通过 `IP` 变量联动。选择 IP 后，底部所有明细查询都使用：
 
 ```promql
-ip="$detail_ip"
+instance=~"$instance"
 ```
 
 详细区标题会显示：
 
 ```text
-详细明细：$detail_name / $detail_ip
+单机排障明细：$show_name / $instance
 ```
 
 这样排障时可以明确当前查看的是哪台 ECS。
@@ -152,13 +155,13 @@ ip="$detail_ip"
 - 内存使用率
 - 磁盘繁忙度
 - 1 分钟负载
-- CPU 分模式
-- 内存明细
-- 网络明细
-- 磁盘 IO 明细
-- 磁盘繁忙明细
-- 负载与进程
-- 基础信息
+- CPU 使用率明细
+- 内存容量与使用率
+- 分区容量明细
+- 系统负载与进程状态
+- 文件描述符与上下文切换
+- 磁盘 I/O 明细
+- 网络与连接明细
 
 ## 后续演进
 
@@ -170,4 +173,3 @@ ECS 主题后续建议补充：
 - 网络错误、丢包、TCP 重传等网络健康指标。
 - 基于真实故障经验调整健康度公式。
 - 告警规则与 dashboard 阈值保持一致。
-
