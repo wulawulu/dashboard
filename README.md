@@ -10,7 +10,7 @@
 - Grafana 页面只用于预览效果，不在页面里手动编辑仪表板。
 - Prometheus 数据源名称固定为 `Prometheus`。
 - Grafana 通过 file provisioning 加载 dashboard，配置在 `grafana/provisioning/` 下。
-- CI 部署到服务器后，会同步 `/data/dashboard` 并重建 Prometheus 数据，避免旧标签或旧 mock 数据影响当前展示。
+- CI 部署到服务器后，会同步 `/data/dashboard` 并重启 Grafana 加载最新 dashboard；Prometheus 指标数据保留在 volume 中。
 
 ## 主题文档
 

@@ -16,7 +16,8 @@ ECS dashboard 的目标分为三层：
 
 当前 dashboard 对应文件：
 
-- `grafana/dashboards/local-node-exporter.json`
+- `grafana/dashboards/local-node-exporter.json`：数据中台 ECS 监控总览
+- `grafana/dashboards/ecs-node-detail.json`：数据中台 ECS 单机明细
 - `prometheus/prometheus.yml`
 
 ## 当前数据模型
@@ -40,30 +41,47 @@ ECS dashboard 的目标分为三层：
 
 顶部状态卡片：
 
+- `云厂商`、`账户`、`分组`：展示当前固定观测范围的来源信息。
 - `ECS 在线 / 总数`：展示在线数量和总数，例如 `10 / 10`。
 - `异常 ECS`：没有异常时显示 `无`，避免 `No data` 造成误解。
 - `最高 CPU`：展示当前最高 CPU 使用率。
 - `最高内存`：展示当前最高内存使用率。
+- `最高磁盘繁忙度`：展示当前最高 I/O Util。
 
-资源总览表参考运维平台资源表风格，字段包括：
+资源风险总览表参考运维平台资源表风格，字段聚焦是否接近阈值和是否需要处理：
 
 - 名称
 - IP
 - 实例 ID
-- 启动天数
+- 在线
 - 健康值
-- 内存
-- CPU
-- 负载
 - CPU 使用率
 - 内存使用率
+- 分区最高使用率
+- 最小可用空间
 - IOutil 使用率
+- 5 分钟负载
+- 阻塞进程
 - 磁盘读取
 - 磁盘写入
-- 在线
-- 阻塞进程
+- 下载带宽
+- 上传带宽
+- TCP 连接数
+- TIME_WAIT 连接数
+- 启动天数
 
 关键指标使用颜色背景表达风险：绿色表示正常，橙色表示需要关注，红色表示异常或高风险。
+
+资源趋势区不再使用整体平均值和 Top10 排名。整体平均容易掩盖单台 ECS 异常，Top10 又和趋势图图例的最大值排序重复。最终仪表板直接按 ECS 展示：
+
+- CPU 使用率
+- 内存使用率
+- 磁盘繁忙度
+- 分区使用率
+- 5 分钟负载
+- 网络吞吐
+
+这些面板每条线代表一台 ECS，图例按最大值排序，便于第一眼看到哪台主机偏高。
 
 ## 异常判定
 
@@ -74,7 +92,7 @@ ECS dashboard 的目标分为三层：
 在线状态来自 Prometheus 的 `up` 指标：
 
 ```promql
-up{job="node", vendor=~"$vendor", account=~"$account", group=~"$group", name=~"$name"}
+up{job="node", group="数据中台"}
 ```
 
 判定规则：
@@ -85,7 +103,7 @@ up{job="node", vendor=~"$vendor", account=~"$account", group=~"$group", name=~"$
 异常 ECS 数量：
 
 ```promql
-count(up{job="node", vendor=~"$vendor", account=~"$account", group=~"$group", name=~"$name", name=~".*$sname.*"} == 0) or vector(0)
+count(up{job="node", group="数据中台"} == 0) or vector(0)
 ```
 
 这里使用 `or vector(0)`，保证没有异常时也返回 `0`，Grafana 再将 `0` 映射为 `无`。
@@ -134,7 +152,7 @@ count(up{job="node", vendor=~"$vendor", account=~"$account", group=~"$group", na
 
 ## 详细明细联动
 
-详细明细区域通过 `IP` 变量联动。选择 IP 后，底部所有明细查询都使用：
+详细明细已经拆到独立 dashboard。总览表中的 IP 列会跳转到 `数据中台 ECS 单机明细`，并通过 `var-instance` 传入具体 IP。单机明细中的所有查询都使用：
 
 ```promql
 instance=~"$instance"
@@ -143,7 +161,7 @@ instance=~"$instance"
 详细区标题会显示：
 
 ```text
-单机排障明细：$show_name / $instance
+数据中台 ECS 单机明细：$show_name / $instance
 ```
 
 这样排障时可以明确当前查看的是哪台 ECS。
@@ -162,6 +180,8 @@ instance=~"$instance"
 - 文件描述符与上下文切换
 - 磁盘 I/O 明细
 - 网络与连接明细
+
+磁盘 I/O 和网络连接不再作为独立分区展示，它们都属于所选 ECS 的单机排障内容。
 
 ## 后续演进
 
