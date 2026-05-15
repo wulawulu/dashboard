@@ -3,7 +3,7 @@
     "list": [
       {
         "builtIn": 1,
-        "datasource": "Prometheus",
+        "datasource": "Prometheus-tenant",
         "enable": true,
         "hide": true,
         "iconColor": "rgba(0, 211, 255, 1)",
@@ -40,7 +40,7 @@
   "panels": [
     {
       "collapsed": false,
-      "datasource": "Prometheus",
+      "datasource": "Prometheus-tenant",
       "gridPos": {
         "x": 0,
         "y": 0,
@@ -53,7 +53,7 @@
       "type": "row"
     },
     {
-      "datasource": "Prometheus",
+      "datasource": "Prometheus-tenant",
       "description": "当前查看明细 IP 对应的 ECS 名称。",
       "fieldConfig": {
         "defaults": {
@@ -103,7 +103,7 @@
       "pluginVersion": "10.4.0",
       "targets": [
         {
-          "datasource": "Prometheus",
+          "datasource": "Prometheus-tenant",
           "editorMode": "code",
           "expr": "count by(name) (node_uname_info{group=~\"$group\",instance=~\"$instance\"})",
           "format": "time_series",
@@ -117,7 +117,7 @@
       "type": "stat"
     },
     {
-      "datasource": "Prometheus",
+      "datasource": "Prometheus-tenant",
       "description": "当前单机明细 dashboard 查询的 ECS IP。",
       "fieldConfig": {
         "defaults": {
@@ -167,7 +167,7 @@
       "pluginVersion": "10.4.0",
       "targets": [
         {
-          "datasource": "Prometheus",
+          "datasource": "Prometheus-tenant",
           "editorMode": "code",
           "expr": "count(node_uname_info{group=~\"$group\",instance=~\"$instance\"})",
           "format": "time_series",
@@ -181,7 +181,7 @@
       "type": "stat"
     },
     {
-      "datasource": "Prometheus",
+      "datasource": "Prometheus-tenant",
       "description": "当前 ECS 实例 ID。",
       "fieldConfig": {
         "defaults": {
@@ -231,7 +231,7 @@
       "pluginVersion": "10.4.0",
       "targets": [
         {
-          "datasource": "Prometheus",
+          "datasource": "Prometheus-tenant",
           "editorMode": "code",
           "expr": "count by(iid) (node_uname_info{group=~\"$group\",instance=~\"$instance\"})",
           "format": "time_series",
@@ -245,7 +245,7 @@
       "type": "stat"
     },
     {
-      "datasource": "Prometheus",
+      "datasource": "Prometheus-tenant",
       "description": "所选 ECS 的 CPU、iowait、内存、磁盘和 Swap 使用率，适合进入明细后先看整体水位。",
       "fieldConfig": {
         "defaults": {
@@ -311,9 +311,9 @@
       "pluginVersion": "10.4.0",
       "targets": [
         {
-          "datasource": "Prometheus",
+          "datasource": "Prometheus-tenant",
           "editorMode": "code",
-          "expr": "100 - (avg(rate(node_cpu_seconds_total{job=\"node\",instance=~\"$instance\",mode=\"idle\"}[$interval])) * 100)",
+          "expr": "100 - (avg(rate(node_cpu_seconds_total{group=~\"$group\",instance=~\"$instance\",mode=\"idle\"}[$interval])) * 100)",
           "format": "time_series",
           "instant": false,
           "legendFormat": "CPU总使用率",
@@ -321,9 +321,9 @@
           "refId": "A"
         },
         {
-          "datasource": "Prometheus",
+          "datasource": "Prometheus-tenant",
           "editorMode": "code",
-          "expr": "avg(rate(node_cpu_seconds_total{job=\"node\",instance=~\"$instance\",mode=\"iowait\"}[$interval])) * 100",
+          "expr": "avg(rate(node_cpu_seconds_total{group=~\"$group\",instance=~\"$instance\",mode=\"iowait\"}[$interval])) * 100",
           "format": "time_series",
           "instant": false,
           "legendFormat": "CPU iowait",
@@ -331,9 +331,9 @@
           "refId": "B"
         },
         {
-          "datasource": "Prometheus",
+          "datasource": "Prometheus-tenant",
           "editorMode": "code",
-          "expr": "(1 - node_memory_MemAvailable_bytes{job=\"node\",instance=~\"$instance\"} / node_memory_MemTotal_bytes{job=\"node\",instance=~\"$instance\"}) * 100",
+          "expr": "(1 - node_memory_MemAvailable_bytes{group=~\"$group\",instance=~\"$instance\"} / node_memory_MemTotal_bytes{group=~\"$group\",instance=~\"$instance\"}) * 100",
           "format": "time_series",
           "instant": false,
           "legendFormat": "内存使用率",
@@ -341,9 +341,9 @@
           "refId": "C"
         },
         {
-          "datasource": "Prometheus",
+          "datasource": "Prometheus-tenant",
           "editorMode": "code",
-          "expr": "max((node_filesystem_size_bytes{job=\"node\",instance=~\"$instance\",fstype=~\"ext.?|xfs|nfs\",mountpoint!~\".*pod.*\"} - node_filesystem_free_bytes{job=\"node\",instance=~\"$instance\",fstype=~\"ext.?|xfs|nfs\",mountpoint!~\".*pod.*\"}) * 100 / node_filesystem_size_bytes{job=\"node\",instance=~\"$instance\",fstype=~\"ext.?|xfs|nfs\",mountpoint!~\".*pod.*\"})",
+          "expr": "max((node_filesystem_size_bytes{group=~\"$group\",instance=~\"$instance\",fstype=~\"ext.?|xfs|nfs\",mountpoint!~\".*pod.*\"} - node_filesystem_free_bytes{group=~\"$group\",instance=~\"$instance\",fstype=~\"ext.?|xfs|nfs\",mountpoint!~\".*pod.*\"}) * 100 / node_filesystem_size_bytes{group=~\"$group\",instance=~\"$instance\",fstype=~\"ext.?|xfs|nfs\",mountpoint!~\".*pod.*\"})",
           "format": "time_series",
           "instant": false,
           "legendFormat": "分区最高使用率",
@@ -351,9 +351,9 @@
           "refId": "D"
         },
         {
-          "datasource": "Prometheus",
+          "datasource": "Prometheus-tenant",
           "editorMode": "code",
-          "expr": "(1 - ((node_memory_SwapFree_bytes{job=\"node\",instance=~\"$instance\"} + 1) / (node_memory_SwapTotal_bytes{job=\"node\",instance=~\"$instance\"} + 1))) * 100",
+          "expr": "(1 - ((node_memory_SwapFree_bytes{group=~\"$group\",instance=~\"$instance\"} + 1) / (node_memory_SwapTotal_bytes{group=~\"$group\",instance=~\"$instance\"} + 1))) * 100",
           "format": "time_series",
           "instant": false,
           "legendFormat": "Swap使用率",
@@ -365,7 +365,7 @@
       "type": "bargauge"
     },
     {
-      "datasource": "Prometheus",
+      "datasource": "Prometheus-tenant",
       "description": "运行时间、CPU 核数、总内存、iowait、文件描述符等静态或低频信息。",
       "fieldConfig": {
         "defaults": {
@@ -419,9 +419,9 @@
       "pluginVersion": "10.4.0",
       "targets": [
         {
-          "datasource": "Prometheus",
+          "datasource": "Prometheus-tenant",
           "editorMode": "code",
-          "expr": "avg(time() - node_boot_time_seconds{job=\"node\",instance=~\"$instance\"})",
+          "expr": "avg(time() - node_boot_time_seconds{group=~\"$group\",instance=~\"$instance\"})",
           "format": "time_series",
           "instant": false,
           "legendFormat": "运行时间",
@@ -429,9 +429,9 @@
           "refId": "A"
         },
         {
-          "datasource": "Prometheus",
+          "datasource": "Prometheus-tenant",
           "editorMode": "code",
-          "expr": "count(node_cpu_seconds_total{job=\"node\",instance=~\"$instance\",mode=\"system\"})",
+          "expr": "count(node_cpu_seconds_total{group=~\"$group\",instance=~\"$instance\",mode=\"system\"})",
           "format": "time_series",
           "instant": false,
           "legendFormat": "CPU核数",
@@ -439,9 +439,9 @@
           "refId": "B"
         },
         {
-          "datasource": "Prometheus",
+          "datasource": "Prometheus-tenant",
           "editorMode": "code",
-          "expr": "sum(node_memory_MemTotal_bytes{job=\"node\",instance=~\"$instance\"})",
+          "expr": "sum(node_memory_MemTotal_bytes{group=~\"$group\",instance=~\"$instance\"})",
           "format": "time_series",
           "instant": false,
           "legendFormat": "总内存",
@@ -449,9 +449,9 @@
           "refId": "C"
         },
         {
-          "datasource": "Prometheus",
+          "datasource": "Prometheus-tenant",
           "editorMode": "code",
-          "expr": "avg(rate(node_cpu_seconds_total{job=\"node\",instance=~\"$instance\",mode=\"iowait\"}[$interval])) * 100",
+          "expr": "avg(rate(node_cpu_seconds_total{group=~\"$group\",instance=~\"$instance\",mode=\"iowait\"}[$interval])) * 100",
           "format": "time_series",
           "instant": false,
           "legendFormat": "CPU iowait",
@@ -459,9 +459,9 @@
           "refId": "D"
         },
         {
-          "datasource": "Prometheus",
+          "datasource": "Prometheus-tenant",
           "editorMode": "code",
-          "expr": "node_filefd_maximum{job=\"node\",instance=~\"$instance\"}",
+          "expr": "node_filefd_maximum{group=~\"$group\",instance=~\"$instance\"}",
           "format": "time_series",
           "instant": false,
           "legendFormat": "系统最大FD",
@@ -473,7 +473,7 @@
       "type": "stat"
     },
     {
-      "datasource": "Prometheus",
+      "datasource": "Prometheus-tenant",
       "description": "将 CPU 总使用率拆分为 user/system/iowait，避免“CPU 高”但原因不清。",
       "fieldConfig": {
         "defaults": {
@@ -557,9 +557,9 @@
       "pluginVersion": "10.4.0",
       "targets": [
         {
-          "datasource": "Prometheus",
+          "datasource": "Prometheus-tenant",
           "editorMode": "code",
-          "expr": "(1 - avg(rate(node_cpu_seconds_total{job=\"node\",instance=~\"$instance\",mode=\"idle\"}[$interval])) by(instance)) * 100",
+          "expr": "(1 - avg(rate(node_cpu_seconds_total{group=~\"$group\",instance=~\"$instance\",mode=\"idle\"}[$interval])) by(instance)) * 100",
           "format": "time_series",
           "instant": false,
           "legendFormat": "CPU总使用率",
@@ -567,9 +567,9 @@
           "refId": "A"
         },
         {
-          "datasource": "Prometheus",
+          "datasource": "Prometheus-tenant",
           "editorMode": "code",
-          "expr": "avg(rate(node_cpu_seconds_total{job=\"node\",instance=~\"$instance\",mode=\"system\"}[$interval])) by(instance) * 100",
+          "expr": "avg(rate(node_cpu_seconds_total{group=~\"$group\",instance=~\"$instance\",mode=\"system\"}[$interval])) by(instance) * 100",
           "format": "time_series",
           "instant": false,
           "legendFormat": "系统态使用率",
@@ -577,9 +577,9 @@
           "refId": "B"
         },
         {
-          "datasource": "Prometheus",
+          "datasource": "Prometheus-tenant",
           "editorMode": "code",
-          "expr": "avg(rate(node_cpu_seconds_total{job=\"node\",instance=~\"$instance\",mode=\"user\"}[$interval])) by(instance) * 100",
+          "expr": "avg(rate(node_cpu_seconds_total{group=~\"$group\",instance=~\"$instance\",mode=\"user\"}[$interval])) by(instance) * 100",
           "format": "time_series",
           "instant": false,
           "legendFormat": "用户态使用率",
@@ -587,9 +587,9 @@
           "refId": "C"
         },
         {
-          "datasource": "Prometheus",
+          "datasource": "Prometheus-tenant",
           "editorMode": "code",
-          "expr": "avg(rate(node_cpu_seconds_total{job=\"node\",instance=~\"$instance\",mode=\"iowait\"}[$interval])) by(instance) * 100",
+          "expr": "avg(rate(node_cpu_seconds_total{group=~\"$group\",instance=~\"$instance\",mode=\"iowait\"}[$interval])) by(instance) * 100",
           "format": "time_series",
           "instant": false,
           "legendFormat": "IO等待使用率",
@@ -601,7 +601,7 @@
       "type": "timeseries"
     },
     {
-      "datasource": "Prometheus",
+      "datasource": "Prometheus-tenant",
       "description": "展示总内存、已用、可用和使用率，判断是否是真实内存压力。",
       "fieldConfig": {
         "defaults": {
@@ -685,9 +685,9 @@
       "pluginVersion": "10.4.0",
       "targets": [
         {
-          "datasource": "Prometheus",
+          "datasource": "Prometheus-tenant",
           "editorMode": "code",
-          "expr": "node_memory_MemAvailable_bytes{job=\"node\",instance=~\"$instance\"}",
+          "expr": "node_memory_MemAvailable_bytes{group=~\"$group\",instance=~\"$instance\"}",
           "format": "time_series",
           "instant": false,
           "legendFormat": "可用内存",
@@ -695,9 +695,9 @@
           "refId": "A"
         },
         {
-          "datasource": "Prometheus",
+          "datasource": "Prometheus-tenant",
           "editorMode": "code",
-          "expr": "node_memory_MemTotal_bytes{job=\"node\",instance=~\"$instance\"}",
+          "expr": "node_memory_MemTotal_bytes{group=~\"$group\",instance=~\"$instance\"}",
           "format": "time_series",
           "instant": false,
           "legendFormat": "总内存",
@@ -705,9 +705,9 @@
           "refId": "B"
         },
         {
-          "datasource": "Prometheus",
+          "datasource": "Prometheus-tenant",
           "editorMode": "code",
-          "expr": "node_memory_MemTotal_bytes{job=\"node\",instance=~\"$instance\"} - node_memory_MemAvailable_bytes{job=\"node\",instance=~\"$instance\"}",
+          "expr": "node_memory_MemTotal_bytes{group=~\"$group\",instance=~\"$instance\"} - node_memory_MemAvailable_bytes{group=~\"$group\",instance=~\"$instance\"}",
           "format": "time_series",
           "instant": false,
           "legendFormat": "已用内存",
@@ -715,9 +715,9 @@
           "refId": "C"
         },
         {
-          "datasource": "Prometheus",
+          "datasource": "Prometheus-tenant",
           "editorMode": "code",
-          "expr": "(1 - node_memory_MemAvailable_bytes{job=\"node\",instance=~\"$instance\"} / node_memory_MemTotal_bytes{job=\"node\",instance=~\"$instance\"}) * 100",
+          "expr": "(1 - node_memory_MemAvailable_bytes{group=~\"$group\",instance=~\"$instance\"} / node_memory_MemTotal_bytes{group=~\"$group\",instance=~\"$instance\"}) * 100",
           "format": "time_series",
           "instant": false,
           "legendFormat": "内存使用率",
@@ -729,7 +729,7 @@
       "type": "timeseries"
     },
     {
-      "datasource": "Prometheus",
+      "datasource": "Prometheus-tenant",
       "description": "按挂载点展示总空间、剩余空间和使用率，仅统计 ext/xfs/nfs 且排除 pod 目录。",
       "fieldConfig": {
         "defaults": {
@@ -829,9 +829,9 @@
       "pluginVersion": "10.4.0",
       "targets": [
         {
-          "datasource": "Prometheus",
+          "datasource": "Prometheus-tenant",
           "editorMode": "code",
-          "expr": "node_filesystem_size_bytes{job=\"node\",instance=~\"$instance\",fstype=~\"ext.?|xfs|nfs\",mountpoint!~\".*pod.*\"} - 0",
+          "expr": "node_filesystem_size_bytes{group=~\"$group\",instance=~\"$instance\",fstype=~\"ext.?|xfs|nfs\",mountpoint!~\".*pod.*\"} - 0",
           "format": "table",
           "instant": true,
           "legendFormat": "总空间",
@@ -839,9 +839,9 @@
           "refId": "A"
         },
         {
-          "datasource": "Prometheus",
+          "datasource": "Prometheus-tenant",
           "editorMode": "code",
-          "expr": "node_filesystem_avail_bytes{job=\"node\",instance=~\"$instance\",fstype=~\"ext.?|xfs|nfs\",mountpoint!~\".*pod.*\"} - 0",
+          "expr": "node_filesystem_avail_bytes{group=~\"$group\",instance=~\"$instance\",fstype=~\"ext.?|xfs|nfs\",mountpoint!~\".*pod.*\"} - 0",
           "format": "table",
           "instant": true,
           "legendFormat": "可用空间",
@@ -849,9 +849,9 @@
           "refId": "B"
         },
         {
-          "datasource": "Prometheus",
+          "datasource": "Prometheus-tenant",
           "editorMode": "code",
-          "expr": "(node_filesystem_size_bytes{job=\"node\",instance=~\"$instance\",fstype=~\"ext.?|xfs|nfs\",mountpoint!~\".*pod.*\"} - node_filesystem_free_bytes{job=\"node\",instance=~\"$instance\",fstype=~\"ext.?|xfs|nfs\",mountpoint!~\".*pod.*\"}) * 100 / node_filesystem_size_bytes{job=\"node\",instance=~\"$instance\",fstype=~\"ext.?|xfs|nfs\",mountpoint!~\".*pod.*\"}",
+          "expr": "(node_filesystem_size_bytes{group=~\"$group\",instance=~\"$instance\",fstype=~\"ext.?|xfs|nfs\",mountpoint!~\".*pod.*\"} - node_filesystem_free_bytes{group=~\"$group\",instance=~\"$instance\",fstype=~\"ext.?|xfs|nfs\",mountpoint!~\".*pod.*\"}) * 100 / node_filesystem_size_bytes{group=~\"$group\",instance=~\"$instance\",fstype=~\"ext.?|xfs|nfs\",mountpoint!~\".*pod.*\"}",
           "format": "table",
           "instant": true,
           "legendFormat": "使用率",
@@ -888,7 +888,7 @@
       "type": "table"
     },
     {
-      "datasource": "Prometheus",
+      "datasource": "Prometheus-tenant",
       "description": "展示 1/5/15 分钟负载、CPU 核数、运行态进程和 IO 阻塞进程。",
       "fieldConfig": {
         "defaults": {
@@ -972,9 +972,9 @@
       "pluginVersion": "10.4.0",
       "targets": [
         {
-          "datasource": "Prometheus",
+          "datasource": "Prometheus-tenant",
           "editorMode": "code",
-          "expr": "node_load1{job=\"node\",instance=~\"$instance\"}",
+          "expr": "node_load1{group=~\"$group\",instance=~\"$instance\"}",
           "format": "time_series",
           "instant": false,
           "legendFormat": "1分钟负载",
@@ -982,9 +982,9 @@
           "refId": "A"
         },
         {
-          "datasource": "Prometheus",
+          "datasource": "Prometheus-tenant",
           "editorMode": "code",
-          "expr": "node_load5{job=\"node\",instance=~\"$instance\"}",
+          "expr": "node_load5{group=~\"$group\",instance=~\"$instance\"}",
           "format": "time_series",
           "instant": false,
           "legendFormat": "5分钟负载",
@@ -992,9 +992,9 @@
           "refId": "B"
         },
         {
-          "datasource": "Prometheus",
+          "datasource": "Prometheus-tenant",
           "editorMode": "code",
-          "expr": "node_load15{job=\"node\",instance=~\"$instance\"}",
+          "expr": "node_load15{group=~\"$group\",instance=~\"$instance\"}",
           "format": "time_series",
           "instant": false,
           "legendFormat": "15分钟负载",
@@ -1002,9 +1002,9 @@
           "refId": "C"
         },
         {
-          "datasource": "Prometheus",
+          "datasource": "Prometheus-tenant",
           "editorMode": "code",
-          "expr": "count(node_cpu_seconds_total{job=\"node\",instance=~\"$instance\",mode=\"system\"})",
+          "expr": "count(node_cpu_seconds_total{group=~\"$group\",instance=~\"$instance\",mode=\"system\"})",
           "format": "time_series",
           "instant": false,
           "legendFormat": "CPU总核数",
@@ -1012,9 +1012,9 @@
           "refId": "D"
         },
         {
-          "datasource": "Prometheus",
+          "datasource": "Prometheus-tenant",
           "editorMode": "code",
-          "expr": "node_procs_running{job=\"node\",instance=~\"$instance\"}",
+          "expr": "node_procs_running{group=~\"$group\",instance=~\"$instance\"}",
           "format": "time_series",
           "instant": false,
           "legendFormat": "运行态进程",
@@ -1022,9 +1022,9 @@
           "refId": "E"
         },
         {
-          "datasource": "Prometheus",
+          "datasource": "Prometheus-tenant",
           "editorMode": "code",
-          "expr": "node_procs_blocked{job=\"node\",instance=~\"$instance\"}",
+          "expr": "node_procs_blocked{group=~\"$group\",instance=~\"$instance\"}",
           "format": "time_series",
           "instant": false,
           "legendFormat": "IO阻塞进程",
@@ -1036,7 +1036,7 @@
       "type": "timeseries"
     },
     {
-      "datasource": "Prometheus",
+      "datasource": "Prometheus-tenant",
       "description": "展示上下文切换速率、系统已分配 FD 和 FD 使用占比。",
       "fieldConfig": {
         "defaults": {
@@ -1120,9 +1120,9 @@
       "pluginVersion": "10.4.0",
       "targets": [
         {
-          "datasource": "Prometheus",
+          "datasource": "Prometheus-tenant",
           "editorMode": "code",
-          "expr": "rate(node_context_switches_total{job=\"node\",instance=~\"$instance\"}[$interval])",
+          "expr": "rate(node_context_switches_total{group=~\"$group\",instance=~\"$instance\"}[$interval])",
           "format": "time_series",
           "instant": false,
           "legendFormat": "每秒上下文切换",
@@ -1130,9 +1130,9 @@
           "refId": "A"
         },
         {
-          "datasource": "Prometheus",
+          "datasource": "Prometheus-tenant",
           "editorMode": "code",
-          "expr": "node_filefd_allocated{job=\"node\",instance=~\"$instance\"}",
+          "expr": "node_filefd_allocated{group=~\"$group\",instance=~\"$instance\"}",
           "format": "time_series",
           "instant": false,
           "legendFormat": "系统已分配FD",
@@ -1140,9 +1140,9 @@
           "refId": "B"
         },
         {
-          "datasource": "Prometheus",
+          "datasource": "Prometheus-tenant",
           "editorMode": "code",
-          "expr": "(node_filefd_allocated{job=\"node\",instance=~\"$instance\"} / node_filefd_maximum{job=\"node\",instance=~\"$instance\"}) * 100",
+          "expr": "(node_filefd_allocated{group=~\"$group\",instance=~\"$instance\"} / node_filefd_maximum{group=~\"$group\",instance=~\"$instance\"}) * 100",
           "format": "time_series",
           "instant": false,
           "legendFormat": "系统FD使用占比",
@@ -1154,7 +1154,7 @@
       "type": "timeseries"
     },
     {
-      "datasource": "Prometheus",
+      "datasource": "Prometheus-tenant",
       "description": "按设备展示平均每次读/写操作耗时，持续高于 100ms 通常需要关注。",
       "fieldConfig": {
         "defaults": {
@@ -1238,9 +1238,9 @@
       "pluginVersion": "10.4.0",
       "targets": [
         {
-          "datasource": "Prometheus",
+          "datasource": "Prometheus-tenant",
           "editorMode": "code",
-          "expr": "rate(node_disk_read_time_seconds_total{job=\"node\",instance=~\"$instance\",device!~\"loop.*|ram.*|fd.*|sr.*\"}[$interval]) / rate(node_disk_reads_completed_total{job=\"node\",instance=~\"$instance\",device!~\"loop.*|ram.*|fd.*|sr.*\"}[$interval])",
+          "expr": "rate(node_disk_read_time_seconds_total{group=~\"$group\",instance=~\"$instance\",device!~\"loop.*|ram.*|fd.*|sr.*\"}[$interval]) / rate(node_disk_reads_completed_total{group=~\"$group\",instance=~\"$instance\",device!~\"loop.*|ram.*|fd.*|sr.*\"}[$interval])",
           "format": "time_series",
           "instant": false,
           "legendFormat": "{{device}}_读取",
@@ -1248,9 +1248,9 @@
           "refId": "A"
         },
         {
-          "datasource": "Prometheus",
+          "datasource": "Prometheus-tenant",
           "editorMode": "code",
-          "expr": "rate(node_disk_write_time_seconds_total{job=\"node\",instance=~\"$instance\",device!~\"loop.*|ram.*|fd.*|sr.*\"}[$interval]) / rate(node_disk_writes_completed_total{job=\"node\",instance=~\"$instance\",device!~\"loop.*|ram.*|fd.*|sr.*\"}[$interval])",
+          "expr": "rate(node_disk_write_time_seconds_total{group=~\"$group\",instance=~\"$instance\",device!~\"loop.*|ram.*|fd.*|sr.*\"}[$interval]) / rate(node_disk_writes_completed_total{group=~\"$group\",instance=~\"$instance\",device!~\"loop.*|ram.*|fd.*|sr.*\"}[$interval])",
           "format": "time_series",
           "instant": false,
           "legendFormat": "{{device}}_写入",
@@ -1262,7 +1262,7 @@
       "type": "timeseries"
     },
     {
-      "datasource": "Prometheus",
+      "datasource": "Prometheus-tenant",
       "description": "按设备展示每秒读写次数和当前正在处理的 I/O 数。",
       "fieldConfig": {
         "defaults": {
@@ -1346,9 +1346,9 @@
       "pluginVersion": "10.4.0",
       "targets": [
         {
-          "datasource": "Prometheus",
+          "datasource": "Prometheus-tenant",
           "editorMode": "code",
-          "expr": "rate(node_disk_reads_completed_total{job=\"node\",instance=~\"$instance\",device!~\"loop.*|ram.*|fd.*|sr.*\"}[$interval])",
+          "expr": "rate(node_disk_reads_completed_total{group=~\"$group\",instance=~\"$instance\",device!~\"loop.*|ram.*|fd.*|sr.*\"}[$interval])",
           "format": "time_series",
           "instant": false,
           "legendFormat": "{{device}}_读取",
@@ -1356,9 +1356,9 @@
           "refId": "A"
         },
         {
-          "datasource": "Prometheus",
+          "datasource": "Prometheus-tenant",
           "editorMode": "code",
-          "expr": "rate(node_disk_writes_completed_total{job=\"node\",instance=~\"$instance\",device!~\"loop.*|ram.*|fd.*|sr.*\"}[$interval])",
+          "expr": "rate(node_disk_writes_completed_total{group=~\"$group\",instance=~\"$instance\",device!~\"loop.*|ram.*|fd.*|sr.*\"}[$interval])",
           "format": "time_series",
           "instant": false,
           "legendFormat": "{{device}}_写入",
@@ -1366,9 +1366,9 @@
           "refId": "B"
         },
         {
-          "datasource": "Prometheus",
+          "datasource": "Prometheus-tenant",
           "editorMode": "code",
-          "expr": "node_disk_io_now{job=\"node\",instance=~\"$instance\",device!~\"loop.*|ram.*|fd.*|sr.*\"}",
+          "expr": "node_disk_io_now{group=~\"$group\",instance=~\"$instance\",device!~\"loop.*|ram.*|fd.*|sr.*\"}",
           "format": "time_series",
           "instant": false,
           "legendFormat": "{{device}}_当前IO",
@@ -1380,7 +1380,7 @@
       "type": "timeseries"
     },
     {
-      "datasource": "Prometheus",
+      "datasource": "Prometheus-tenant",
       "description": "按设备展示每秒读取和写入容量。",
       "fieldConfig": {
         "defaults": {
@@ -1464,9 +1464,9 @@
       "pluginVersion": "10.4.0",
       "targets": [
         {
-          "datasource": "Prometheus",
+          "datasource": "Prometheus-tenant",
           "editorMode": "code",
-          "expr": "rate(node_disk_read_bytes_total{job=\"node\",instance=~\"$instance\",device!~\"loop.*|ram.*|fd.*|sr.*\"}[$interval])",
+          "expr": "rate(node_disk_read_bytes_total{group=~\"$group\",instance=~\"$instance\",device!~\"loop.*|ram.*|fd.*|sr.*\"}[$interval])",
           "format": "time_series",
           "instant": false,
           "legendFormat": "{{device}}_读取",
@@ -1474,9 +1474,9 @@
           "refId": "A"
         },
         {
-          "datasource": "Prometheus",
+          "datasource": "Prometheus-tenant",
           "editorMode": "code",
-          "expr": "rate(node_disk_written_bytes_total{job=\"node\",instance=~\"$instance\",device!~\"loop.*|ram.*|fd.*|sr.*\"}[$interval])",
+          "expr": "rate(node_disk_written_bytes_total{group=~\"$group\",instance=~\"$instance\",device!~\"loop.*|ram.*|fd.*|sr.*\"}[$interval])",
           "format": "time_series",
           "instant": false,
           "legendFormat": "{{device}}_写入",
@@ -1488,7 +1488,7 @@
       "type": "timeseries"
     },
     {
-      "datasource": "Prometheus",
+      "datasource": "Prometheus-tenant",
       "description": "按设备展示每秒 I/O 操作耗时占比，即磁盘繁忙度。",
       "fieldConfig": {
         "defaults": {
@@ -1572,9 +1572,9 @@
       "pluginVersion": "10.4.0",
       "targets": [
         {
-          "datasource": "Prometheus",
+          "datasource": "Prometheus-tenant",
           "editorMode": "code",
-          "expr": "100 * rate(node_disk_io_time_seconds_total{job=\"node\",instance=~\"$instance\",device!~\"loop.*|ram.*|fd.*|sr.*\"}[$interval])",
+          "expr": "100 * rate(node_disk_io_time_seconds_total{group=~\"$group\",instance=~\"$instance\",device!~\"loop.*|ram.*|fd.*|sr.*\"}[$interval])",
           "format": "time_series",
           "instant": false,
           "legendFormat": "{{device}}_IOutil",
@@ -1582,9 +1582,9 @@
           "refId": "A"
         },
         {
-          "datasource": "Prometheus",
+          "datasource": "Prometheus-tenant",
           "editorMode": "code",
-          "expr": "100 * rate(node_disk_io_time_weighted_seconds_total{job=\"node\",instance=~\"$instance\",device!~\"loop.*|ram.*|fd.*|sr.*\"}[$interval])",
+          "expr": "100 * rate(node_disk_io_time_weighted_seconds_total{group=~\"$group\",instance=~\"$instance\",device!~\"loop.*|ram.*|fd.*|sr.*\"}[$interval])",
           "format": "time_series",
           "instant": false,
           "legendFormat": "{{device}}_加权IO时间",
@@ -1596,7 +1596,7 @@
       "type": "timeseries"
     },
     {
-      "datasource": "Prometheus",
+      "datasource": "Prometheus-tenant",
       "description": "按所选网卡展示每秒下载和上传带宽，上传以负值展示便于同图对比。",
       "fieldConfig": {
         "defaults": {
@@ -1680,9 +1680,9 @@
       "pluginVersion": "10.4.0",
       "targets": [
         {
-          "datasource": "Prometheus",
+          "datasource": "Prometheus-tenant",
           "editorMode": "code",
-          "expr": "rate(node_network_receive_bytes_total{job=\"node\",instance=~\"$instance\",device=~\"$device\"}[$interval]) * 8",
+          "expr": "rate(node_network_receive_bytes_total{group=~\"$group\",instance=~\"$instance\",device=~\"$device\"}[$interval]) * 8",
           "format": "time_series",
           "instant": false,
           "legendFormat": "{{device}}_下载",
@@ -1690,9 +1690,9 @@
           "refId": "A"
         },
         {
-          "datasource": "Prometheus",
+          "datasource": "Prometheus-tenant",
           "editorMode": "code",
-          "expr": "-rate(node_network_transmit_bytes_total{job=\"node\",instance=~\"$instance\",device=~\"$device\"}[$interval]) * 8",
+          "expr": "-rate(node_network_transmit_bytes_total{group=~\"$group\",instance=~\"$instance\",device=~\"$device\"}[$interval]) * 8",
           "format": "time_series",
           "instant": false,
           "legendFormat": "{{device}}_上传",
@@ -1704,7 +1704,7 @@
       "type": "timeseries"
     },
     {
-      "datasource": "Prometheus",
+      "datasource": "Prometheus-tenant",
       "description": "展示当前 TCP 连接、TIME_WAIT、Socket 使用量、TCP 重传和 ListenDrops。",
       "fieldConfig": {
         "defaults": {
@@ -1788,9 +1788,9 @@
       "pluginVersion": "10.4.0",
       "targets": [
         {
-          "datasource": "Prometheus",
+          "datasource": "Prometheus-tenant",
           "editorMode": "code",
-          "expr": "node_netstat_Tcp_CurrEstab{job=\"node\",instance=~\"$instance\"}",
+          "expr": "node_netstat_Tcp_CurrEstab{group=~\"$group\",instance=~\"$instance\"}",
           "format": "time_series",
           "instant": false,
           "legendFormat": "当前TCP连接",
@@ -1798,9 +1798,9 @@
           "refId": "A"
         },
         {
-          "datasource": "Prometheus",
+          "datasource": "Prometheus-tenant",
           "editorMode": "code",
-          "expr": "node_sockstat_TCP_tw{job=\"node\",instance=~\"$instance\"}",
+          "expr": "node_sockstat_TCP_tw{group=~\"$group\",instance=~\"$instance\"}",
           "format": "time_series",
           "instant": false,
           "legendFormat": "TIME_WAIT",
@@ -1808,9 +1808,9 @@
           "refId": "B"
         },
         {
-          "datasource": "Prometheus",
+          "datasource": "Prometheus-tenant",
           "editorMode": "code",
-          "expr": "node_sockstat_sockets_used{job=\"node\",instance=~\"$instance\"}",
+          "expr": "node_sockstat_sockets_used{group=~\"$group\",instance=~\"$instance\"}",
           "format": "time_series",
           "instant": false,
           "legendFormat": "Socket已使用",
@@ -1818,9 +1818,9 @@
           "refId": "C"
         },
         {
-          "datasource": "Prometheus",
+          "datasource": "Prometheus-tenant",
           "editorMode": "code",
-          "expr": "rate(node_netstat_Tcp_RetransSegs{job=\"node\",instance=~\"$instance\"}[$interval])",
+          "expr": "rate(node_netstat_Tcp_RetransSegs{group=~\"$group\",instance=~\"$instance\"}[$interval])",
           "format": "time_series",
           "instant": false,
           "legendFormat": "TCP重传/秒",
@@ -1828,9 +1828,9 @@
           "refId": "D"
         },
         {
-          "datasource": "Prometheus",
+          "datasource": "Prometheus-tenant",
           "editorMode": "code",
-          "expr": "rate(node_netstat_TcpExt_ListenDrops{job=\"node\",instance=~\"$instance\"}[$interval])",
+          "expr": "rate(node_netstat_TcpExt_ListenDrops{group=~\"$group\",instance=~\"$instance\"}[$interval])",
           "format": "time_series",
           "instant": false,
           "legendFormat": "ListenDrops/秒",
@@ -1858,7 +1858,7 @@
           "text": "数据中台",
           "value": "数据中台"
         },
-        "datasource": "Prometheus",
+        "datasource": "Prometheus-tenant",
         "definition": "label_values(node_uname_info, group)",
         "hide": 0,
         "includeAll": false,
@@ -1902,7 +1902,7 @@
           "text": "All",
           "value": "$__all"
         },
-        "datasource": "Prometheus",
+        "datasource": "Prometheus-tenant",
         "definition": "label_values(node_uname_info{group=~\"$group\"}, instance)",
         "hide": 0,
         "includeAll": false,
@@ -1926,7 +1926,7 @@
           "text": "All",
           "value": "$__all"
         },
-        "datasource": "Prometheus",
+        "datasource": "Prometheus-tenant",
         "definition": "label_values(node_network_info{group=~\"$group\",instance=~\"$instance\",device!~\"tap.*|veth.*|br.*|docker.*|virbr.*|lo.*|cni.*\"}, device)",
         "hide": 2,
         "includeAll": true,
@@ -1950,7 +1950,7 @@
           "text": "",
           "value": ""
         },
-        "datasource": "Prometheus",
+        "datasource": "Prometheus-tenant",
         "definition": "label_values(node_uname_info{group=~\"$group\",instance=~\"$instance\"}, name)",
         "hide": 2,
         "includeAll": false,
@@ -1974,7 +1974,7 @@
           "text": "",
           "value": ""
         },
-        "datasource": "Prometheus",
+        "datasource": "Prometheus-tenant",
         "definition": "label_values(node_uname_info{group=~\"$group\",instance=~\"$instance\"}, iid)",
         "hide": 2,
         "includeAll": false,

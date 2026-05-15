@@ -3,7 +3,7 @@
     "list": [
       {
         "builtIn": 1,
-        "datasource": "Prometheus",
+        "datasource": "Prometheus-tenant",
         "enable": true,
         "hide": true,
         "iconColor": "rgba(0, 211, 255, 1)",
@@ -40,7 +40,7 @@
   "panels": [
     {
       "collapsed": false,
-      "datasource": "Prometheus",
+      "datasource": "Prometheus-tenant",
       "gridPos": {
         "x": 0,
         "y": 0,
@@ -53,7 +53,7 @@
       "type": "row"
     },
     {
-      "datasource": "Prometheus",
+      "datasource": "Prometheus-tenant",
       "description": "当前 dashboard 固定展示的数据来源云厂商。",
       "fieldConfig": {
         "defaults": {
@@ -103,7 +103,7 @@
       "pluginVersion": "10.4.0",
       "targets": [
         {
-          "datasource": "Prometheus",
+          "datasource": "Prometheus-tenant",
           "editorMode": "code",
           "expr": "count by(vendor) (node_uname_info{group=\"__系统分组__\"})",
           "format": "time_series",
@@ -117,7 +117,7 @@
       "type": "stat"
     },
     {
-      "datasource": "Prometheus",
+      "datasource": "Prometheus-tenant",
       "description": "当前 dashboard 固定展示的云账户。",
       "fieldConfig": {
         "defaults": {
@@ -167,7 +167,7 @@
       "pluginVersion": "10.4.0",
       "targets": [
         {
-          "datasource": "Prometheus",
+          "datasource": "Prometheus-tenant",
           "editorMode": "code",
           "expr": "count by(account) (node_uname_info{group=\"__系统分组__\"})",
           "format": "time_series",
@@ -181,7 +181,7 @@
       "type": "stat"
     },
     {
-      "datasource": "Prometheus",
+      "datasource": "Prometheus-tenant",
       "description": "当前 dashboard 固定展示的 ECS 分组。",
       "fieldConfig": {
         "defaults": {
@@ -231,7 +231,7 @@
       "pluginVersion": "10.4.0",
       "targets": [
         {
-          "datasource": "Prometheus",
+          "datasource": "Prometheus-tenant",
           "editorMode": "code",
           "expr": "count by(group) (node_uname_info{group=\"__系统分组__\"})",
           "format": "time_series",
@@ -245,8 +245,8 @@
       "type": "stat"
     },
     {
-      "datasource": "Prometheus",
-      "description": "当前筛选范围内 exporter 可采集的 ECS 数量。",
+      "datasource": "Prometheus-tenant",
+      "description": "当前系统分组下 node_uname_info 识别到的 ECS 数量。",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -270,7 +270,8 @@
               }
             ]
           },
-          "unit": "short"
+          "unit": "short",
+          "decimals": 2
         },
         "overrides": []
       },
@@ -299,22 +300,22 @@
       "pluginVersion": "10.4.0",
       "targets": [
         {
-          "datasource": "Prometheus",
+          "datasource": "Prometheus-tenant",
           "editorMode": "code",
-          "expr": "count(up{job=\"node\",group=\"__系统分组__\"} == 1)",
+          "expr": "count(node_uname_info{group=\"__系统分组__\"})",
           "format": "time_series",
           "instant": true,
-          "legendFormat": "在线",
+          "legendFormat": "已接入 ECS",
           "range": false,
           "refId": "A"
         }
       ],
-      "title": "在线主机数",
+      "title": "已接入 ECS",
       "type": "stat"
     },
     {
-      "datasource": "Prometheus",
-      "description": "当前筛选范围内 node_uname_info 识别到的 ECS 总数。",
+      "datasource": "Prometheus-tenant",
+      "description": "系统分组内单台 ECS 的最高 CPU 使用率。",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -338,7 +339,8 @@
               }
             ]
           },
-          "unit": "short"
+          "unit": "percent",
+          "decimals": 2
         },
         "overrides": []
       },
@@ -367,22 +369,22 @@
       "pluginVersion": "10.4.0",
       "targets": [
         {
-          "datasource": "Prometheus",
+          "datasource": "Prometheus-tenant",
           "editorMode": "code",
-          "expr": "count(node_uname_info{job=\"node\",group=\"__系统分组__\"})",
+          "expr": "max(100 * (1 - avg by (instance,name) (rate(node_cpu_seconds_total{group=\"__系统分组__\",mode=\"idle\"}[3m]))))",
           "format": "time_series",
           "instant": true,
-          "legendFormat": "总数",
+          "legendFormat": "最高 CPU",
           "range": false,
           "refId": "A"
         }
       ],
-      "title": "主机总数",
+      "title": "最高 CPU 使用率",
       "type": "stat"
     },
     {
-      "datasource": "Prometheus",
-      "description": "Exporter 不可采集的 ECS 数量，0 会显示为“无”。",
+      "datasource": "Prometheus-tenant",
+      "description": "系统分组内单台 ECS 的最高内存使用率。",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -415,7 +417,8 @@
               }
             ]
           },
-          "unit": "short"
+          "unit": "percent",
+          "decimals": 2
         },
         "overrides": []
       },
@@ -444,22 +447,22 @@
       "pluginVersion": "10.4.0",
       "targets": [
         {
-          "datasource": "Prometheus",
+          "datasource": "Prometheus-tenant",
           "editorMode": "code",
-          "expr": "count(up{job=\"node\",group=\"__系统分组__\"} == 0) or vector(0)",
+          "expr": "max(100 * (1 - node_memory_MemAvailable_bytes{group=\"__系统分组__\"} / node_memory_MemTotal_bytes{group=\"__系统分组__\"}))",
           "format": "time_series",
           "instant": true,
-          "legendFormat": "异常",
+          "legendFormat": "最高内存",
           "range": false,
           "refId": "A"
         }
       ],
-      "title": "异常主机数",
+      "title": "最高内存使用率",
       "type": "stat"
     },
     {
-      "datasource": "Prometheus",
-      "description": "按 ECS 聚合后的最高 CPU 使用率。",
+      "datasource": "Prometheus-tenant",
+      "description": "系统分组内单台 ECS 或磁盘设备的最高 IO 繁忙度。",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -483,7 +486,8 @@
               }
             ]
           },
-          "unit": "percent"
+          "unit": "percent",
+          "decimals": 2
         },
         "overrides": []
       },
@@ -512,22 +516,22 @@
       "pluginVersion": "10.4.0",
       "targets": [
         {
-          "datasource": "Prometheus",
+          "datasource": "Prometheus-tenant",
           "editorMode": "code",
-          "expr": "max(100 * (1 - avg by (instance,name) (rate(node_cpu_seconds_total{job=\"node\",group=\"__系统分组__\",mode=\"idle\"}[3m]))))",
+          "expr": "max(100 * rate(node_disk_io_time_seconds_total{group=\"__系统分组__\",device!~\"loop.*|ram.*|fd.*|sr.*\"}[3m]))",
           "format": "time_series",
           "instant": true,
-          "legendFormat": "最高CPU",
+          "legendFormat": "最高磁盘繁忙度",
           "range": false,
           "refId": "A"
         }
       ],
-      "title": "最高 CPU 使用率",
+      "title": "最高磁盘繁忙度",
       "type": "stat"
     },
     {
-      "datasource": "Prometheus",
-      "description": "当前内存使用率最高的 ECS。",
+      "datasource": "Prometheus-tenant",
+      "description": "健康值低于 80 的 ECS 数量；其中低于 60 建议立即处理，60-80 需要关注。",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -551,7 +555,8 @@
               }
             ]
           },
-          "unit": "percent"
+          "unit": "short",
+          "decimals": 2
         },
         "overrides": []
       },
@@ -580,22 +585,22 @@
       "pluginVersion": "10.4.0",
       "targets": [
         {
-          "datasource": "Prometheus",
+          "datasource": "Prometheus-tenant",
           "editorMode": "code",
-          "expr": "max(100 * (1 - node_memory_MemAvailable_bytes{job=\"node\",group=\"__系统分组__\"} / node_memory_MemTotal_bytes{job=\"node\",group=\"__系统分组__\"}))",
+          "expr": "count((min by(instance,name,iid) (label_replace(clamp_min(clamp_max(100 - ((100 * (1 - avg by(instance,name,iid) (rate(node_cpu_seconds_total{group=\"__系统分组__\",mode=\"idle\"}[3m])))) - 80) * 5, 100), 0), \"health_part\", \"cpu\", \"instance\", \".*\") or label_replace(clamp_min(clamp_max(100 - ((100 * (1 - max by(instance,name,iid) (node_memory_MemAvailable_bytes{group=\"__系统分组__\"}) / max by(instance,name,iid) (node_memory_MemTotal_bytes{group=\"__系统分组__\"}))) - 80) * 5, 100), 0), \"health_part\", \"memory\", \"instance\", \".*\") or label_replace(clamp_min(clamp_max(100 - ((max by(instance,name,iid) ((node_filesystem_size_bytes{group=\"__系统分组__\",fstype=~\"ext.?|xfs|nfs\",mountpoint!~\".*pod.*\"} - node_filesystem_free_bytes{group=\"__系统分组__\",fstype=~\"ext.?|xfs|nfs\",mountpoint!~\".*pod.*\"}) * 100 / node_filesystem_size_bytes{group=\"__系统分组__\",fstype=~\"ext.?|xfs|nfs\",mountpoint!~\".*pod.*\"})) - 80) * 5, 100), 0), \"health_part\", \"filesystem\", \"instance\", \".*\") or label_replace(clamp_min(clamp_max(100 - ((max by(instance,name,iid) (100 * rate(node_disk_io_time_seconds_total{group=\"__系统分组__\",device!~\"loop.*|ram.*|fd.*|sr.*\"}[3m]))) - 80) * 5, 100), 0), \"health_part\", \"disk_io\", \"instance\", \".*\")) * on(instance) group_left() ((max by(instance) (up{group=\"__系统分组__\"}) or max by(instance) (node_uname_info{group=\"__系统分组__\"})))) < 80) or vector(0)",
           "format": "time_series",
           "instant": true,
-          "legendFormat": "最高内存",
+          "legendFormat": "需关注主机",
           "range": false,
           "refId": "A"
         }
       ],
-      "title": "最高内存使用率",
+      "title": "需关注主机",
       "type": "stat"
     },
     {
-      "datasource": "Prometheus",
-      "description": "按磁盘设备取 I/O Util 最高值，用于快速发现磁盘瓶颈。",
+      "datasource": "Prometheus-tenant",
+      "description": "系统分组内单台 ECS 的最高 5 分钟负载。",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -619,7 +624,8 @@
               }
             ]
           },
-          "unit": "percent"
+          "unit": "short",
+          "decimals": 2
         },
         "overrides": []
       },
@@ -648,22 +654,22 @@
       "pluginVersion": "10.4.0",
       "targets": [
         {
-          "datasource": "Prometheus",
+          "datasource": "Prometheus-tenant",
           "editorMode": "code",
-          "expr": "max(100 * rate(node_disk_io_time_seconds_total{job=\"node\",group=\"__系统分组__\",device!~\"loop.*|ram.*|fd.*|sr.*\"}[3m]))",
+          "expr": "max(node_load5{group=\"__系统分组__\"})",
           "format": "time_series",
           "instant": true,
-          "legendFormat": "最高IOutil",
+          "legendFormat": "最高负载",
           "range": false,
           "refId": "A"
         }
       ],
-      "title": "最高磁盘繁忙度",
+      "title": "最高负载 5m",
       "type": "stat"
     },
     {
-      "datasource": "Prometheus",
-      "description": "按 ECS 汇总当前资源风险。重点关注 CPU、内存、分区空间、磁盘繁忙度、负载、阻塞进程和网络连接；点击 IP 进入单机明细。",
+      "datasource": "Prometheus-tenant",
+      "description": "按 ECS 汇总当前资源风险。健康值采用木板效应：先按在线状态做 0/1 门控，不在线为 0；在线时分别计算 CPU、内存、分区使用率、磁盘 IO 繁忙度的健康分，取最小值。单项资源使用率不超过 80% 记 100 分，超过 80% 后每增加 1% 扣 5 分。健康值 >=80 表示正常观察，60-80 表示需要关注，<60 表示需要处理。 点击 IP 进入单机明细。",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -804,11 +810,11 @@
                     },
                     {
                       "color": "orange",
-                      "value": 80
+                      "value": 60
                     },
                     {
                       "color": "green",
-                      "value": 90
+                      "value": 80
                     }
                   ]
                 }
@@ -1071,9 +1077,9 @@
       "pluginVersion": "10.4.0",
       "targets": [
         {
-          "datasource": "Prometheus",
+          "datasource": "Prometheus-tenant",
           "editorMode": "code",
-          "expr": "node_uname_info{job=\"node\",group=\"__系统分组__\"} - 0",
+          "expr": "node_uname_info{group=\"__系统分组__\"} - 0",
           "format": "table",
           "instant": true,
           "legendFormat": "基础信息",
@@ -1081,19 +1087,19 @@
           "refId": "A"
         },
         {
-          "datasource": "Prometheus",
+          "datasource": "Prometheus-tenant",
           "editorMode": "code",
-          "expr": "max by(instance,name,iid) (up{job=\"node\",group=\"__系统分组__\"})",
+          "expr": "max by(instance,name,iid) (node_uname_info{group=\"__系统分组__\"})",
           "format": "table",
           "instant": true,
-          "legendFormat": "在线",
+          "legendFormat": "已接入",
           "range": false,
           "refId": "B"
         },
         {
-          "datasource": "Prometheus",
+          "datasource": "Prometheus-tenant",
           "editorMode": "code",
-          "expr": "100 * (1 - avg by(instance,name,iid) (rate(node_cpu_seconds_total{job=\"node\",group=\"__系统分组__\",mode=\"idle\"}[3m])))",
+          "expr": "100 * (1 - avg by(instance,name,iid) (rate(node_cpu_seconds_total{group=\"__系统分组__\",mode=\"idle\"}[3m])))",
           "format": "table",
           "instant": true,
           "legendFormat": "CPU使用率",
@@ -1101,9 +1107,9 @@
           "refId": "C"
         },
         {
-          "datasource": "Prometheus",
+          "datasource": "Prometheus-tenant",
           "editorMode": "code",
-          "expr": "100 * (1 - max by(instance,name,iid) (node_memory_MemAvailable_bytes{job=\"node\",group=\"__系统分组__\"}) / max by(instance,name,iid) (node_memory_MemTotal_bytes{job=\"node\",group=\"__系统分组__\"}))",
+          "expr": "100 * (1 - max by(instance,name,iid) (node_memory_MemAvailable_bytes{group=\"__系统分组__\"}) / max by(instance,name,iid) (node_memory_MemTotal_bytes{group=\"__系统分组__\"}))",
           "format": "table",
           "instant": true,
           "legendFormat": "内存使用率",
@@ -1111,9 +1117,9 @@
           "refId": "D"
         },
         {
-          "datasource": "Prometheus",
+          "datasource": "Prometheus-tenant",
           "editorMode": "code",
-          "expr": "max by(instance,name,iid) ((node_filesystem_size_bytes{job=\"node\",group=\"__系统分组__\",fstype=~\"ext.?|xfs|nfs\",mountpoint!~\".*pod.*\"} - node_filesystem_free_bytes{job=\"node\",group=\"__系统分组__\",fstype=~\"ext.?|xfs|nfs\",mountpoint!~\".*pod.*\"}) * 100 / node_filesystem_size_bytes{job=\"node\",group=\"__系统分组__\",fstype=~\"ext.?|xfs|nfs\",mountpoint!~\".*pod.*\"})",
+          "expr": "max by(instance,name,iid) ((node_filesystem_size_bytes{group=\"__系统分组__\",fstype=~\"ext.?|xfs|nfs\",mountpoint!~\".*pod.*\"} - node_filesystem_free_bytes{group=\"__系统分组__\",fstype=~\"ext.?|xfs|nfs\",mountpoint!~\".*pod.*\"}) * 100 / node_filesystem_size_bytes{group=\"__系统分组__\",fstype=~\"ext.?|xfs|nfs\",mountpoint!~\".*pod.*\"})",
           "format": "table",
           "instant": true,
           "legendFormat": "分区最高使用率",
@@ -1121,9 +1127,9 @@
           "refId": "E"
         },
         {
-          "datasource": "Prometheus",
+          "datasource": "Prometheus-tenant",
           "editorMode": "code",
-          "expr": "min by(instance,name,iid) (node_filesystem_avail_bytes{job=\"node\",group=\"__系统分组__\",fstype=~\"ext.?|xfs|nfs\",mountpoint!~\".*pod.*\"})",
+          "expr": "min by(instance,name,iid) (node_filesystem_avail_bytes{group=\"__系统分组__\",fstype=~\"ext.?|xfs|nfs\",mountpoint!~\".*pod.*\"})",
           "format": "table",
           "instant": true,
           "legendFormat": "最小可用空间",
@@ -1131,9 +1137,9 @@
           "refId": "F"
         },
         {
-          "datasource": "Prometheus",
+          "datasource": "Prometheus-tenant",
           "editorMode": "code",
-          "expr": "max by(instance,name,iid) (100 * rate(node_disk_io_time_seconds_total{job=\"node\",group=\"__系统分组__\",device!~\"loop.*|ram.*|fd.*|sr.*\"}[3m]))",
+          "expr": "max by(instance,name,iid) (100 * rate(node_disk_io_time_seconds_total{group=\"__系统分组__\",device!~\"loop.*|ram.*|fd.*|sr.*\"}[3m]))",
           "format": "table",
           "instant": true,
           "legendFormat": "磁盘繁忙度",
@@ -1141,9 +1147,9 @@
           "refId": "G"
         },
         {
-          "datasource": "Prometheus",
+          "datasource": "Prometheus-tenant",
           "editorMode": "code",
-          "expr": "max by(instance,name,iid) (node_load5{job=\"node\",group=\"__系统分组__\"})",
+          "expr": "max by(instance,name,iid) (node_load5{group=\"__系统分组__\"})",
           "format": "table",
           "instant": true,
           "legendFormat": "5分钟负载",
@@ -1151,9 +1157,9 @@
           "refId": "H"
         },
         {
-          "datasource": "Prometheus",
+          "datasource": "Prometheus-tenant",
           "editorMode": "code",
-          "expr": "max by(instance,name,iid) (node_procs_blocked{job=\"node\",group=\"__系统分组__\"})",
+          "expr": "max by(instance,name,iid) (node_procs_blocked{group=\"__系统分组__\"})",
           "format": "table",
           "instant": true,
           "legendFormat": "阻塞进程",
@@ -1161,9 +1167,9 @@
           "refId": "I"
         },
         {
-          "datasource": "Prometheus",
+          "datasource": "Prometheus-tenant",
           "editorMode": "code",
-          "expr": "sum by(instance,name,iid) (rate(node_disk_read_bytes_total{job=\"node\",group=\"__系统分组__\",device!~\"loop.*|ram.*|fd.*|sr.*\"}[3m]))",
+          "expr": "sum by(instance,name,iid) (rate(node_disk_read_bytes_total{group=\"__系统分组__\",device!~\"loop.*|ram.*|fd.*|sr.*\"}[3m]))",
           "format": "table",
           "instant": true,
           "legendFormat": "磁盘读取",
@@ -1171,9 +1177,9 @@
           "refId": "J"
         },
         {
-          "datasource": "Prometheus",
+          "datasource": "Prometheus-tenant",
           "editorMode": "code",
-          "expr": "sum by(instance,name,iid) (rate(node_disk_written_bytes_total{job=\"node\",group=\"__系统分组__\",device!~\"loop.*|ram.*|fd.*|sr.*\"}[3m]))",
+          "expr": "sum by(instance,name,iid) (rate(node_disk_written_bytes_total{group=\"__系统分组__\",device!~\"loop.*|ram.*|fd.*|sr.*\"}[3m]))",
           "format": "table",
           "instant": true,
           "legendFormat": "磁盘写入",
@@ -1181,9 +1187,9 @@
           "refId": "K"
         },
         {
-          "datasource": "Prometheus",
+          "datasource": "Prometheus-tenant",
           "editorMode": "code",
-          "expr": "max by(instance,name,iid) (rate(node_network_receive_bytes_total{job=\"node\",group=\"__系统分组__\",device!~\"tap.*|veth.*|br.*|docker.*|virbr.*|lo.*|cni.*\"}[3m]) * 8)",
+          "expr": "max by(instance,name,iid) (rate(node_network_receive_bytes_total{group=\"__系统分组__\",device!~\"tap.*|veth.*|br.*|docker.*|virbr.*|lo.*|cni.*\"}[3m]) * 8)",
           "format": "table",
           "instant": true,
           "legendFormat": "下载带宽",
@@ -1191,9 +1197,9 @@
           "refId": "L"
         },
         {
-          "datasource": "Prometheus",
+          "datasource": "Prometheus-tenant",
           "editorMode": "code",
-          "expr": "max by(instance,name,iid) (rate(node_network_transmit_bytes_total{job=\"node\",group=\"__系统分组__\",device!~\"tap.*|veth.*|br.*|docker.*|virbr.*|lo.*|cni.*\"}[3m]) * 8)",
+          "expr": "max by(instance,name,iid) (rate(node_network_transmit_bytes_total{group=\"__系统分组__\",device!~\"tap.*|veth.*|br.*|docker.*|virbr.*|lo.*|cni.*\"}[3m]) * 8)",
           "format": "table",
           "instant": true,
           "legendFormat": "上传带宽",
@@ -1201,9 +1207,9 @@
           "refId": "M"
         },
         {
-          "datasource": "Prometheus",
+          "datasource": "Prometheus-tenant",
           "editorMode": "code",
-          "expr": "max by(instance,name,iid) (node_netstat_Tcp_CurrEstab{job=\"node\",group=\"__系统分组__\"})",
+          "expr": "max by(instance,name,iid) (node_netstat_Tcp_CurrEstab{group=\"__系统分组__\"})",
           "format": "table",
           "instant": true,
           "legendFormat": "TCP连接数",
@@ -1211,9 +1217,9 @@
           "refId": "N"
         },
         {
-          "datasource": "Prometheus",
+          "datasource": "Prometheus-tenant",
           "editorMode": "code",
-          "expr": "max by(instance,name,iid) (node_sockstat_TCP_tw{job=\"node\",group=\"__系统分组__\"})",
+          "expr": "max by(instance,name,iid) (node_sockstat_TCP_tw{group=\"__系统分组__\"})",
           "format": "table",
           "instant": true,
           "legendFormat": "TIME_WAIT连接数",
@@ -1221,9 +1227,9 @@
           "refId": "O"
         },
         {
-          "datasource": "Prometheus",
+          "datasource": "Prometheus-tenant",
           "editorMode": "code",
-          "expr": "max by(instance,name,iid) (floor((time() - node_boot_time_seconds{job=\"node\",group=\"__系统分组__\"}) / 86400))",
+          "expr": "max by(instance,name,iid) (floor((time() - node_boot_time_seconds{group=\"__系统分组__\"}) / 86400))",
           "format": "table",
           "instant": true,
           "legendFormat": "启动天数",
@@ -1231,9 +1237,9 @@
           "refId": "P"
         },
         {
-          "datasource": "Prometheus",
+          "datasource": "Prometheus-tenant",
           "editorMode": "code",
-          "expr": "100 - clamp_max(max by(instance,name,iid) ((100 * (1 - avg by(instance,name,iid) (rate(node_cpu_seconds_total{job=\"node\",group=\"__系统分组__\",mode=\"idle\"}[3m])))) or (100 * (1 - max by(instance,name,iid) (node_memory_MemAvailable_bytes{job=\"node\",group=\"__系统分组__\"}) / max by(instance,name,iid) (node_memory_MemTotal_bytes{job=\"node\",group=\"__系统分组__\"}))) or (max by(instance,name,iid) ((node_filesystem_size_bytes{job=\"node\",group=\"__系统分组__\",fstype=~\"ext.?|xfs|nfs\",mountpoint!~\".*pod.*\"} - node_filesystem_free_bytes{job=\"node\",group=\"__系统分组__\",fstype=~\"ext.?|xfs|nfs\",mountpoint!~\".*pod.*\"}) * 100 / node_filesystem_size_bytes{job=\"node\",group=\"__系统分组__\",fstype=~\"ext.?|xfs|nfs\",mountpoint!~\".*pod.*\"})) or (max by(instance,name,iid) (100 * rate(node_disk_io_time_seconds_total{job=\"node\",group=\"__系统分组__\",device!~\"loop.*|ram.*|fd.*|sr.*\"}[3m])))), 100) / 10",
+          "expr": "min by(instance,name,iid) (label_replace(clamp_min(clamp_max(100 - ((100 * (1 - avg by(instance,name,iid) (rate(node_cpu_seconds_total{group=\"__系统分组__\",mode=\"idle\"}[3m])))) - 80) * 5, 100), 0), \"health_part\", \"cpu\", \"instance\", \".*\") or label_replace(clamp_min(clamp_max(100 - ((100 * (1 - max by(instance,name,iid) (node_memory_MemAvailable_bytes{group=\"__系统分组__\"}) / max by(instance,name,iid) (node_memory_MemTotal_bytes{group=\"__系统分组__\"}))) - 80) * 5, 100), 0), \"health_part\", \"memory\", \"instance\", \".*\") or label_replace(clamp_min(clamp_max(100 - ((max by(instance,name,iid) ((node_filesystem_size_bytes{group=\"__系统分组__\",fstype=~\"ext.?|xfs|nfs\",mountpoint!~\".*pod.*\"} - node_filesystem_free_bytes{group=\"__系统分组__\",fstype=~\"ext.?|xfs|nfs\",mountpoint!~\".*pod.*\"}) * 100 / node_filesystem_size_bytes{group=\"__系统分组__\",fstype=~\"ext.?|xfs|nfs\",mountpoint!~\".*pod.*\"})) - 80) * 5, 100), 0), \"health_part\", \"filesystem\", \"instance\", \".*\") or label_replace(clamp_min(clamp_max(100 - ((max by(instance,name,iid) (100 * rate(node_disk_io_time_seconds_total{group=\"__系统分组__\",device!~\"loop.*|ram.*|fd.*|sr.*\"}[3m]))) - 80) * 5, 100), 0), \"health_part\", \"disk_io\", \"instance\", \".*\")) * on(instance) group_left() ((max by(instance) (up{group=\"__系统分组__\"}) or max by(instance) (node_uname_info{group=\"__系统分组__\"})))",
           "format": "table",
           "instant": true,
           "legendFormat": "健康值",
@@ -1316,7 +1322,7 @@
       "type": "table"
     },
     {
-      "datasource": "Prometheus",
+      "datasource": "Prometheus-tenant",
       "description": "每条线代表一台 ECS 的 CPU 使用率；图例按最大值排序，便于直接看到哪台主机 CPU 偏高。",
       "fieldConfig": {
         "defaults": {
@@ -1407,9 +1413,9 @@
       "pluginVersion": "10.4.0",
       "targets": [
         {
-          "datasource": "Prometheus",
+          "datasource": "Prometheus-tenant",
           "editorMode": "code",
-          "expr": "100 * (1 - avg by(name,instance) (rate(node_cpu_seconds_total{job=\"node\",group=\"__系统分组__\",mode=\"idle\"}[3m])))",
+          "expr": "100 * (1 - avg by(name,instance) (rate(node_cpu_seconds_total{group=\"__系统分组__\",mode=\"idle\"}[3m])))",
           "format": "time_series",
           "instant": false,
           "legendFormat": "{{name}} / {{instance}}",
@@ -1421,7 +1427,7 @@
       "type": "timeseries"
     },
     {
-      "datasource": "Prometheus",
+      "datasource": "Prometheus-tenant",
       "description": "每条线代表一台 ECS 的内存使用率；用于发现单台主机内存持续偏高。",
       "fieldConfig": {
         "defaults": {
@@ -1512,9 +1518,9 @@
       "pluginVersion": "10.4.0",
       "targets": [
         {
-          "datasource": "Prometheus",
+          "datasource": "Prometheus-tenant",
           "editorMode": "code",
-          "expr": "100 * (1 - node_memory_MemAvailable_bytes{job=\"node\",group=\"__系统分组__\"} / node_memory_MemTotal_bytes{job=\"node\",group=\"__系统分组__\"})",
+          "expr": "100 * (1 - node_memory_MemAvailable_bytes{group=\"__系统分组__\"} / node_memory_MemTotal_bytes{group=\"__系统分组__\"})",
           "format": "time_series",
           "instant": false,
           "legendFormat": "{{name}} / {{instance}}",
@@ -1526,7 +1532,7 @@
       "type": "timeseries"
     },
     {
-      "datasource": "Prometheus",
+      "datasource": "Prometheus-tenant",
       "description": "按 ECS 聚合磁盘 I/O Util 最高值，持续偏高通常表示磁盘成为瓶颈。",
       "fieldConfig": {
         "defaults": {
@@ -1617,9 +1623,9 @@
       "pluginVersion": "10.4.0",
       "targets": [
         {
-          "datasource": "Prometheus",
+          "datasource": "Prometheus-tenant",
           "editorMode": "code",
-          "expr": "max by(name,instance) (100 * rate(node_disk_io_time_seconds_total{job=\"node\",group=\"__系统分组__\",device!~\"loop.*|ram.*|fd.*|sr.*\"}[3m]))",
+          "expr": "max by(name,instance) (100 * rate(node_disk_io_time_seconds_total{group=\"__系统分组__\",device!~\"loop.*|ram.*|fd.*|sr.*\"}[3m]))",
           "format": "time_series",
           "instant": false,
           "legendFormat": "{{name}} / {{instance}}",
@@ -1631,7 +1637,7 @@
       "type": "timeseries"
     },
     {
-      "datasource": "Prometheus",
+      "datasource": "Prometheus-tenant",
       "description": "按 ECS 展示 ext/xfs/nfs 分区中的最高使用率，用于发现容量风险。",
       "fieldConfig": {
         "defaults": {
@@ -1722,9 +1728,9 @@
       "pluginVersion": "10.4.0",
       "targets": [
         {
-          "datasource": "Prometheus",
+          "datasource": "Prometheus-tenant",
           "editorMode": "code",
-          "expr": "max by(name,instance) ((node_filesystem_size_bytes{job=\"node\",group=\"__系统分组__\",fstype=~\"ext.?|xfs|nfs\",mountpoint!~\".*pod.*\"} - node_filesystem_free_bytes{job=\"node\",group=\"__系统分组__\",fstype=~\"ext.?|xfs|nfs\",mountpoint!~\".*pod.*\"}) * 100 / node_filesystem_size_bytes{job=\"node\",group=\"__系统分组__\",fstype=~\"ext.?|xfs|nfs\",mountpoint!~\".*pod.*\"})",
+          "expr": "max by(name,instance) ((node_filesystem_size_bytes{group=\"__系统分组__\",fstype=~\"ext.?|xfs|nfs\",mountpoint!~\".*pod.*\"} - node_filesystem_free_bytes{group=\"__系统分组__\",fstype=~\"ext.?|xfs|nfs\",mountpoint!~\".*pod.*\"}) * 100 / node_filesystem_size_bytes{group=\"__系统分组__\",fstype=~\"ext.?|xfs|nfs\",mountpoint!~\".*pod.*\"})",
           "format": "time_series",
           "instant": false,
           "legendFormat": "{{name}} / {{instance}}",
@@ -1736,7 +1742,7 @@
       "type": "timeseries"
     },
     {
-      "datasource": "Prometheus",
+      "datasource": "Prometheus-tenant",
       "description": "每条线代表一台 ECS 的 5 分钟负载，用于结合 CPU 核数判断排队压力。",
       "fieldConfig": {
         "defaults": {
@@ -1827,9 +1833,9 @@
       "pluginVersion": "10.4.0",
       "targets": [
         {
-          "datasource": "Prometheus",
+          "datasource": "Prometheus-tenant",
           "editorMode": "code",
-          "expr": "node_load5{job=\"node\",group=\"__系统分组__\"}",
+          "expr": "node_load5{group=\"__系统分组__\"}",
           "format": "time_series",
           "instant": false,
           "legendFormat": "{{name}} / {{instance}}",
@@ -1841,7 +1847,7 @@
       "type": "timeseries"
     },
     {
-      "datasource": "Prometheus",
+      "datasource": "Prometheus-tenant",
       "description": "按 ECS 聚合网卡下载/上传带宽，上传用负值展示，便于同图对比。",
       "fieldConfig": {
         "defaults": {
@@ -1932,9 +1938,9 @@
       "pluginVersion": "10.4.0",
       "targets": [
         {
-          "datasource": "Prometheus",
+          "datasource": "Prometheus-tenant",
           "editorMode": "code",
-          "expr": "sum by(name,instance) (rate(node_network_receive_bytes_total{job=\"node\",group=\"__系统分组__\",device!~\"tap.*|veth.*|br.*|docker.*|virbr.*|lo.*|cni.*\"}[3m]) * 8)",
+          "expr": "sum by(name,instance) (rate(node_network_receive_bytes_total{group=\"__系统分组__\",device!~\"tap.*|veth.*|br.*|docker.*|virbr.*|lo.*|cni.*\"}[3m]) * 8)",
           "format": "time_series",
           "instant": false,
           "legendFormat": "{{name}} 下载",
@@ -1942,9 +1948,9 @@
           "refId": "A"
         },
         {
-          "datasource": "Prometheus",
+          "datasource": "Prometheus-tenant",
           "editorMode": "code",
-          "expr": "-sum by(name,instance) (rate(node_network_transmit_bytes_total{job=\"node\",group=\"__系统分组__\",device!~\"tap.*|veth.*|br.*|docker.*|virbr.*|lo.*|cni.*\"}[3m]) * 8)",
+          "expr": "-sum by(name,instance) (rate(node_network_transmit_bytes_total{group=\"__系统分组__\",device!~\"tap.*|veth.*|br.*|docker.*|virbr.*|lo.*|cni.*\"}[3m]) * 8)",
           "format": "time_series",
           "instant": false,
           "legendFormat": "{{name}} 上传",
