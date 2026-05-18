@@ -275,7 +275,85 @@
           },
           "unit": "percent"
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Swap使用率"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "-1": {
+                        "text": "未启用"
+                      }
+                    }
+                  },
+                  {
+                    "type": "range",
+                    "options": {
+                      "from": -1.1,
+                      "to": -0.9,
+                      "result": {
+                        "text": "未启用"
+                      }
+                    }
+                  },
+                  {
+                    "type": "special",
+                    "options": {
+                      "match": "nan",
+                      "result": {
+                        "text": "未启用"
+                      }
+                    }
+                  },
+                  {
+                    "type": "special",
+                    "options": {
+                      "match": "null",
+                      "result": {
+                        "text": "未启用"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "noValue",
+                "value": "未启用"
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "gray",
+                      "value": null
+                    },
+                    {
+                      "color": "green",
+                      "value": 0
+                    },
+                    {
+                      "color": "orange",
+                      "value": 70
+                    },
+                    {
+                      "color": "red",
+                      "value": 90
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
         "x": 0,
@@ -353,7 +431,7 @@
         {
           "datasource": "Prometheus-tenant",
           "editorMode": "code",
-          "expr": "(1 - ((node_memory_SwapFree_bytes{group=~\"$group\",instance=~\"$instance\"} + 1) / (node_memory_SwapTotal_bytes{group=~\"$group\",instance=~\"$instance\"} + 1))) * 100",
+          "expr": "(100 * (1 - (max by(instance,name,iid) (node_memory_SwapFree_bytes{group=~\"$group\",instance=~\"$instance\"}) + 1) / (max by(instance,name,iid) (node_memory_SwapTotal_bytes{group=~\"$group\",instance=~\"$instance\"}) + 1)) and on(instance,name,iid) (max by(instance,name,iid) (node_memory_SwapTotal_bytes{group=~\"$group\",instance=~\"$instance\"}) > 0)) or on(instance,name,iid) (-1 + 0 * max by(instance,name,iid) (node_uname_info{group=~\"$group\",instance=~\"$instance\"}))",
           "format": "time_series",
           "instant": false,
           "legendFormat": "Swap使用率",
@@ -1870,7 +1948,7 @@
           "refId": "PrometheusVariableQueryEditor-VariableQuery"
         },
         "refresh": 1,
-        "regex": "",
+        "regex": "/数据中台|业务系统A|业务系统B/",
         "skipUrlSync": false,
         "sort": 1,
         "type": "query"

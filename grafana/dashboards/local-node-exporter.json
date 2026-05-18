@@ -841,6 +841,105 @@
                 "value": 0
               }
             ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Swap使用率"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "percent"
+              },
+              {
+                "id": "decimals",
+                "value": 1
+              },
+              {
+                "id": "min",
+                "value": -1
+              },
+              {
+                "id": "max",
+                "value": 100
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "-1": {
+                        "text": "未启用"
+                      }
+                    }
+                  },
+                  {
+                    "type": "range",
+                    "options": {
+                      "from": -1.1,
+                      "to": -0.9,
+                      "result": {
+                        "text": "未启用"
+                      }
+                    }
+                  },
+                  {
+                    "type": "special",
+                    "options": {
+                      "match": "nan",
+                      "result": {
+                        "text": "未启用"
+                      }
+                    }
+                  },
+                  {
+                    "type": "special",
+                    "options": {
+                      "match": "null",
+                      "result": {
+                        "text": "未启用"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "noValue",
+                "value": "未启用"
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-background"
+                }
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "gray",
+                      "value": null
+                    },
+                    {
+                      "color": "green",
+                      "value": 0
+                    },
+                    {
+                      "color": "orange",
+                      "value": 70
+                    },
+                    {
+                      "color": "red",
+                      "value": 90
+                    }
+                  ]
+                }
+              }
+            ]
           }
         ]
       },
@@ -908,7 +1007,7 @@
         {
           "datasource": "Prometheus-tenant",
           "editorMode": "code",
-          "expr": "clamp_min(100 * (1 - max by(instance,name,iid) (node_memory_SwapFree_bytes{group=~\"$group\"}) / max by(instance,name,iid) (node_memory_SwapTotal_bytes{group=~\"$group\"})), 0) or on(instance,name,iid) (0 * max by(instance,name,iid) (node_memory_SwapTotal_bytes{group=~\"$group\"}))",
+          "expr": "(100 * (1 - (max by(instance,name,iid) (node_memory_SwapFree_bytes{group=~\"$group\"}) + 1) / (max by(instance,name,iid) (node_memory_SwapTotal_bytes{group=~\"$group\"}) + 1)) and on(instance,name,iid) (max by(instance,name,iid) (node_memory_SwapTotal_bytes{group=~\"$group\"}) > 0)) or on(instance,name,iid) (-1 + 0 * max by(instance,name,iid) (node_uname_info{group=~\"$group\"}))",
           "format": "table",
           "instant": true,
           "legendFormat": "Swap使用率",
@@ -1071,7 +1170,8 @@
               "nodename": true,
               "release": true,
               "sysname": true,
-              "version": true
+              "version": true,
+              "Value #A": true
             },
             "indexByName": {
               "name": 0,
@@ -1150,7 +1250,7 @@
           "refId": "PrometheusVariableQueryEditor-VariableQuery"
         },
         "refresh": 1,
-        "regex": "",
+        "regex": "/数据中台|业务系统A|业务系统B/",
         "skipUrlSync": false,
         "sort": 1,
         "type": "query"
