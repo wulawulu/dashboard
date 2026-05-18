@@ -154,12 +154,20 @@
     },
     {
       "datasource": "Prometheus-tenant",
-      "description": "系统分组内单台 ECS 的最高 CPU 使用率。",
+      "description": "当前系统分组内 CPU 使用率最高的 ECS。卡片下方显示 IP，点击进入单机明细。",
       "fieldConfig": {
         "defaults": {
           "color": {
             "mode": "thresholds"
           },
+          "decimals": 1,
+          "links": [
+            {
+              "title": "查看单机明细",
+              "url": "/d/data-middle-ecs-detail/data-middle-ecs-detail?var-group=${group}&var-instance=${__field.labels.instance}&from=${__from}&to=${__to}",
+              "targetBlank": false
+            }
+          ],
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -178,10 +186,7 @@
               }
             ]
           },
-          "unit": "percent",
-          "decimals": 1,
-          "min": 0,
-          "max": 100
+          "unit": "percent"
         },
         "overrides": []
       },
@@ -193,6 +198,9 @@
       },
       "id": 3,
       "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "center",
         "orientation": "auto",
         "reduceOptions": {
           "calcs": [
@@ -201,43 +209,42 @@
           "fields": "",
           "values": false
         },
-        "showThresholdLabels": false,
-        "showThresholdMarkers": true
+        "textMode": "value_and_name",
+        "wideLayout": false
       },
       "pluginVersion": "10.4.0",
       "targets": [
         {
           "datasource": "Prometheus-tenant",
           "editorMode": "code",
-          "expr": "max(100 * (1 - avg by (instance,name) (rate(node_cpu_seconds_total{group=~\"$group\",mode=\"idle\"}[3m]))))",
+          "expr": "topk(1, 100 * (1 - avg by(instance,name,iid) (rate(node_cpu_seconds_total{group=~\"$group\",mode=\"idle\"}[3m]))))",
           "format": "time_series",
           "instant": true,
-          "legendFormat": "最高 CPU",
+          "legendFormat": "{{instance}}",
           "range": false,
           "refId": "A"
         }
       ],
       "title": "最高 CPU 使用率",
-      "type": "gauge"
+      "type": "stat"
     },
     {
       "datasource": "Prometheus-tenant",
-      "description": "系统分组内单台 ECS 的最高内存使用率。",
+      "description": "当前系统分组内内存使用率最高的 ECS。卡片下方显示 IP，点击进入单机明细。",
       "fieldConfig": {
         "defaults": {
           "color": {
             "mode": "thresholds"
           },
-          "mappings": [
+          "decimals": 1,
+          "links": [
             {
-              "options": {
-                "0": {
-                  "text": "无"
-                }
-              },
-              "type": "value"
+              "title": "查看单机明细",
+              "url": "/d/data-middle-ecs-detail/data-middle-ecs-detail?var-group=${group}&var-instance=${__field.labels.instance}&from=${__from}&to=${__to}",
+              "targetBlank": false
             }
           ],
+          "mappings": [],
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -255,10 +262,7 @@
               }
             ]
           },
-          "unit": "percent",
-          "decimals": 1,
-          "min": 0,
-          "max": 100
+          "unit": "percent"
         },
         "overrides": []
       },
@@ -270,6 +274,9 @@
       },
       "id": 4,
       "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "center",
         "orientation": "auto",
         "reduceOptions": {
           "calcs": [
@@ -278,33 +285,41 @@
           "fields": "",
           "values": false
         },
-        "showThresholdLabels": false,
-        "showThresholdMarkers": true
+        "textMode": "value_and_name",
+        "wideLayout": false
       },
       "pluginVersion": "10.4.0",
       "targets": [
         {
           "datasource": "Prometheus-tenant",
           "editorMode": "code",
-          "expr": "max(100 * (1 - node_memory_MemAvailable_bytes{group=~\"$group\"} / node_memory_MemTotal_bytes{group=~\"$group\"}))",
+          "expr": "topk(1, 100 * (1 - max by(instance,name,iid) (node_memory_MemAvailable_bytes{group=~\"$group\"}) / max by(instance,name,iid) (node_memory_MemTotal_bytes{group=~\"$group\"})))",
           "format": "time_series",
           "instant": true,
-          "legendFormat": "最高内存",
+          "legendFormat": "{{instance}}",
           "range": false,
           "refId": "A"
         }
       ],
       "title": "最高内存使用率",
-      "type": "gauge"
+      "type": "stat"
     },
     {
       "datasource": "Prometheus-tenant",
-      "description": "系统分组内单台 ECS 或磁盘设备的最高 IO 繁忙度。",
+      "description": "当前系统分组内磁盘 I/O Util 最高的 ECS。卡片下方显示 IP，点击进入单机明细。",
       "fieldConfig": {
         "defaults": {
           "color": {
             "mode": "thresholds"
           },
+          "decimals": 1,
+          "links": [
+            {
+              "title": "查看单机明细",
+              "url": "/d/data-middle-ecs-detail/data-middle-ecs-detail?var-group=${group}&var-instance=${__field.labels.instance}&from=${__from}&to=${__to}",
+              "targetBlank": false
+            }
+          ],
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -323,10 +338,7 @@
               }
             ]
           },
-          "unit": "percent",
-          "decimals": 1,
-          "min": 0,
-          "max": 100
+          "unit": "percent"
         },
         "overrides": []
       },
@@ -338,6 +350,9 @@
       },
       "id": 5,
       "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "center",
         "orientation": "auto",
         "reduceOptions": {
           "calcs": [
@@ -346,33 +361,41 @@
           "fields": "",
           "values": false
         },
-        "showThresholdLabels": false,
-        "showThresholdMarkers": true
+        "textMode": "value_and_name",
+        "wideLayout": false
       },
       "pluginVersion": "10.4.0",
       "targets": [
         {
           "datasource": "Prometheus-tenant",
           "editorMode": "code",
-          "expr": "max(100 * rate(node_disk_io_time_seconds_total{group=~\"$group\",device!~\"loop.*|ram.*|fd.*|sr.*\"}[3m]))",
+          "expr": "topk(1, max by(instance,name,iid) (100 * rate(node_disk_io_time_seconds_total{group=~\"$group\",device!~\"loop.*|ram.*|fd.*|sr.*\"}[3m])))",
           "format": "time_series",
           "instant": true,
-          "legendFormat": "最高磁盘繁忙度",
+          "legendFormat": "{{instance}}",
           "range": false,
           "refId": "A"
         }
       ],
       "title": "最高磁盘繁忙度",
-      "type": "gauge"
+      "type": "stat"
     },
     {
       "datasource": "Prometheus-tenant",
-      "description": "系统分组内单台 ECS 的最高 5 分钟负载。",
+      "description": "当前系统分组内 5 分钟负载最高的 ECS。卡片下方显示 IP，点击进入单机明细。",
       "fieldConfig": {
         "defaults": {
           "color": {
             "mode": "thresholds"
           },
+          "decimals": 1,
+          "links": [
+            {
+              "title": "查看单机明细",
+              "url": "/d/data-middle-ecs-detail/data-middle-ecs-detail?var-group=${group}&var-instance=${__field.labels.instance}&from=${__from}&to=${__to}",
+              "targetBlank": false
+            }
+          ],
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -383,16 +406,15 @@
               },
               {
                 "color": "orange",
-                "value": 70
+                "value": 4
               },
               {
                 "color": "red",
-                "value": 90
+                "value": 8
               }
             ]
           },
-          "unit": "short",
-          "decimals": 1
+          "unit": "short"
         },
         "overrides": []
       },
@@ -415,18 +437,18 @@
           "fields": "",
           "values": false
         },
-        "textMode": "auto",
-        "wideLayout": true
+        "textMode": "value_and_name",
+        "wideLayout": false
       },
       "pluginVersion": "10.4.0",
       "targets": [
         {
           "datasource": "Prometheus-tenant",
           "editorMode": "code",
-          "expr": "max(node_load5{group=~\"$group\"})",
+          "expr": "topk(1, max by(instance,name,iid) (node_load5{group=~\"$group\"}))",
           "format": "time_series",
           "instant": true,
-          "legendFormat": "最高负载",
+          "legendFormat": "{{instance}}",
           "range": false,
           "refId": "A"
         }
@@ -1105,8 +1127,7 @@
   "schemaVersion": 39,
   "tags": [
     "ecs",
-    "node-exporter",
-    "数据中台"
+    "node-exporter"
   ],
   "templating": {
     "list": [

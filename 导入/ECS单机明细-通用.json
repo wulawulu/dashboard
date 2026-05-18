@@ -1847,7 +1847,6 @@
   "tags": [
     "ecs",
     "node-exporter",
-    "数据中台",
     "单机明细"
   ],
   "templating": {
@@ -2000,7 +1999,7 @@
   },
   "timepicker": {},
   "timezone": "browser",
-  "title": "数据中台 ECS 单机明细",
+  "title": "ECS 单机明细",
   "uid": "data-middle-ecs-detail",
   "version": 1,
   "weekStart": ""
