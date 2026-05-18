@@ -123,3 +123,38 @@ scrape_configs:
           region: "内网"
           exp: "长期"
           instance: "10.10.20.20"
+      # Mock another measurement system so the overview dashboard can switch
+      # between systems from the top-left variable.
+      - targets: ["node-exporter:9100"]
+        labels:
+          vendor: "内网云"
+          account: "量测系统生产账户"
+          group: "量测系统"
+          name: "量测系统采集网关生产ECS01"
+          iid: "i-meter-0001"
+          cservice: "ecs"
+          region: "内网"
+          exp: "长期"
+          instance: "10.20.30.11"
+      - targets: ["node-exporter:9100"]
+        labels:
+          vendor: "内网云"
+          account: "量测系统生产账户"
+          group: "量测系统"
+          name: "量测系统数据处理生产ECS02"
+          iid: "i-meter-0002"
+          cservice: "ecs"
+          region: "内网"
+          exp: "长期"
+          instance: "10.20.30.12"
+      - targets: ["node-exporter:9100"]
+        labels:
+          vendor: "内网云"
+          account: "量测系统生产账户"
+          group: "量测系统"
+          name: "量测系统接口服务生产ECS03"
+          iid: "i-meter-0003"
+          cservice: "ecs"
+          region: "内网"
+          exp: "长期"
+          instance: "10.20.30.13"

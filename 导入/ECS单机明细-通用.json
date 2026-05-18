@@ -31,9 +31,9 @@
       "tags": [],
       "targetBlank": false,
       "title": "返回 ECS 总览",
-      "tooltip": "返回数据中台 ECS 监控总览",
+      "tooltip": "返回 ECS 监控总览",
       "type": "link",
-      "url": "/d/data-middle-ecs-monitor/data-middle-ecs-monitor"
+      "url": "/d/ecs-overview/ecs-overview"
     }
   ],
   "liveNow": false,

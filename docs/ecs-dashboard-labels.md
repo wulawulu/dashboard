@@ -2,7 +2,7 @@
 
 本文档基于 `参考/数据中台-ECS监控-1778728407266.json` 梳理最终 ECS 仪表板使用的标签、变量、指标和面板命名。当前可直接使用的仪表板文件包括：
 
-- `grafana/dashboards/local-node-exporter.json`：数据中台 ECS 监控总览
+- `grafana/dashboards/local-node-exporter.json`：ECS 监控总览
 - `grafana/dashboards/ecs-node-detail.json`：数据中台 ECS 单机明细
 
 ## 标签口径
@@ -13,7 +13,7 @@
 | --- | --- | --- |
 | `vendor` | 云厂商筛选 | `内网云` |
 | `account` | 云账户筛选 | `数据中台生产账户` |
-| `group` | ECS 分组筛选 | `数据中台` |
+| `group` | ECS 分组筛选 | `数据中台`、`量测系统` |
 | `name` | ECS 展示名称 | 业务可读名称，例如 `数据中台调度数据接入生产ECS01` |
 | `instance` | ECS IP | 直接使用 IP，例如 `10.10.20.11` |
 | `iid` | 云实例 ID | 例如 `i-mock-0001` |
@@ -25,10 +25,11 @@
 
 ## 变量设计
 
-最终仪表板保留参考看板中的核心标签。总览 dashboard 不展示 Grafana 原生变量栏，云厂商、账户、分组作为顶部信息卡展示；单机明细 dashboard 通过总览中的 IP 链接传入 `var-instance`。
+最终仪表板保留参考看板中的核心标签。总览 dashboard 通过顶部 `系统` 变量选择 `group`，所有系统共用一份总览；单机明细 dashboard 通过总览中的 IP 链接传入 `var-group` 和 `var-instance`。
 
 | 变量 | 展示名 | 来源 |
 | --- | --- | --- |
+| `$group` | 系统 | 总览和单机明细的可见变量，来自 `label_values(node_uname_info, group)` |
 | `$instance` | 查看明细 IP | 单机明细 dashboard 的可见变量，由总览中的 IP 链接设置，也可在明细页切换 |
 | `$interval` | 间隔 | 隐藏变量，默认 `3m` |
 | `$device` | 网卡 | 隐藏变量，排除 `tap/veth/br/docker/virbr/lo/cni` 后默认选择全部网卡 |
@@ -74,6 +75,6 @@
 ## 使用注意
 
 - 真实 ECS 接入时，`instance` 应直接表示 IP 或 `IP:port`，需要与内网参考看板保持一致。
-- `group` 当前固定围绕 `数据中台`，后续扩到其他系统时可以放开正则。
+- 总览 dashboard 已使用 `$group` 变量过滤系统，新增系统只要 Prometheus 指标带稳定的 `group` 标签即可出现在下拉框。
 - `node_network_info` 用于网卡变量；如果真实 exporter 未开启该指标，网络明细仍可通过 `$device=All` 查看聚合数据，但网卡下拉可能为空。
 - 总览 dashboard 不再单独放容量分析表，容量相关风险已合并到资源风险总览中的 `分区最高使用率` 和 `最小可用空间`。
